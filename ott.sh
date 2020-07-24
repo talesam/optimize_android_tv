@@ -277,11 +277,10 @@ install_laucher(){
 		echo "Removendo versão do Laucher ATV PRO..." && sleep 1
 		adb shell pm uninstall --user 0 ca.dstudio.atvlauncher.pro
 		if [ "$?" -eq 0 ]; then
-				echo "Laucher ATV PRO removido com sucesso!"
-			else
-				echo "Erro ao remover Laucher ATV PRO"
-				pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
-			fi
+			echo "Laucher ATV PRO removido com sucesso!"
+		else
+			echo "Erro ao remover Laucher ATV PRO"
+			pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
 		fi
 	fi
 
@@ -290,11 +289,10 @@ install_laucher(){
 		echo "Removendo versão do Laucher ATV FRE..." && sleep 1
 		adb shell pm uninstall --user 0 ca.dstudio.atvlauncher.free
 		if [ "$?" -eq 0 ]; then
-				echo "Laucher ATV PRO removido com sucesso!"
-			else
-				echo "Erro ao remover Laucher ATV PRO"
-				pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
-			fi
+			echo "Laucher ATV PRO removido com sucesso!"
+		else
+			echo "Erro ao remover Laucher ATV PRO"
+			pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
 		fi
 	fi
 
@@ -629,7 +627,7 @@ menu_principal(){
 			3 ) menu_ativar_desativar ;;
 			4 ) menu_laucher ;;
 			5 ) menu_install_apps ;;
-			6 ) exit ; adb disconnect $IP >/dev/null ; exit ;;
+			6 ) exit ; adb disconnect $IP >/dev/null ;;
 			* ) clear; echo "Por favor escolha 1, 2, 3, 4, 5 ou 6"; 
 		esac
 	done
