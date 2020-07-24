@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.18"
+VER="v0.0.19"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -272,14 +272,64 @@ linha() {
 
 # Instalar e ativar Laucher ATV Pro TCL Mod + Widget
 install_laucher(){
+	# Remove versão do ATV PRO
+	if [ "$(adb shell pm list packages -u | cut -f2 -d: | grep ca.dstudio.atvlauncher.pro)" != "" ]; then
+		echo "Removendo versão do Laucher ATV PRO..." && sleep 1
+		adb shell pm uninstall --user 0 ca.dstudio.atvlauncher.pro
+		if [ "$?" -eq 0 ]; then
+				echo "Laucher ATV PRO removido com sucesso!"
+			else
+				echo "Erro ao remover Laucher ATV PRO"
+				pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
+			fi
+		fi
+	fi
+
+	# Remove versão do ATV FREE
+	if [ "$(adb shell pm list packages -u | cut -f2 -d: | grep ca.dstudio.atvlauncher.pro)" != "" ]; then
+		echo "Removendo versão do Laucher ATV FRE..." && sleep 1
+		adb shell pm uninstall --user 0 ca.dstudio.atvlauncher.free
+		if [ "$?" -eq 0 ]; then
+				echo "Laucher ATV PRO removido com sucesso!"
+			else
+				echo "Erro ao remover Laucher ATV PRO"
+				pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
+			fi
+		fi
+	fi
+
 	if [ "$(adb shell pm list packages -u | cut -f2 -d: | grep com.tcl.home)" != "" ]; then
 		if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.tcl.home)" = "" ]; then
 			echo "Ativando Laucher ATV PRO MOD"
 			adb shell pm enable com.tcl.home
-			if [ "$(adb shell pm enable com.tcl.home | cut -f5 -d " ")" = "enabled" ]; then
+			#if [ "$(adb shell pm enable com.tcl.home | cut -f5 -d " ")" = "enabled" ]; then
+			if [ "$?" -eq 0 ]; then
 				echo "Laucher ativado com sucesso!"
 			else
-				echo "Erro ao ativar o Laucher"
+				pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
+			fi
+			# Desativa o laucher padrão
+			adb shell pm disable-user --user 0 com.google.android.tvlauncher
+			if [ "$(adb shell pm disable-user --user 0 com.google.android.tvlauncher | grep disabled-user | cut -f5 -d " ")" = "disabled-user" ]; then
+				echo "Laucher ATV PRO MOD ativo com sucesso!"
+				echo "Ativando a nova Laucher ATV PRO MOD..." && sleep 2
+				adb shell monkey -p com.tcl.home -c android.intent.category.LAUNCHER 1
+				if [ "$?" -eq 0 ]; then
+					echo "Laucher ATV PRO MOD ativado com sucesso!"
+					echo "Abrindo Laucher ATV PRO MOD..." && sleep 1
+				else
+					pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+				fi
+			else
+				pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+			fi
+			echo "Atualizando as permissões..."
+			# Seta permissão para o widget
+			adb shell appwidget grantbind --package com.tcl.home --user 0
+			if [ "$?" -ne 0 ]; then
+				pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+			else
+				echo "Permissões atualizadas com sucesso!"
 			fi
 		fi
 	else
@@ -308,21 +358,21 @@ install_laucher(){
 						echo "Laucher ATV PRO MOD ativado com sucesso!"
 						echo "Abrindo Laucher ATV PRO MOD..." && sleep 1
 					else
-						echo "Erro ao ativar o Laucher ATV PRO. Verifique sua conexão."
+						pause "Erro ao ativar o Laucher ATV PRO, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 					fi
 				else
-					echo "Erro ao ativar o Laucher. Verifique suas conexões." ; menu_laucher
+					pause "Erro ao ativar o Laucher ATV PRO, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 				fi
 				echo "Atualizando as permissões..."
 				# Seta permissão para o widget
 				adb shell appwidget grantbind --package com.tcl.home --user 0
 				if [ "$?" -ne 0 ]; then
-					echo "Erro ao setar permissões, Verifique a conexão com a TV." ; menu_laucher
+					pause "Erro ao setar permissões, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 				else
 					echo "Permissões atualizadas com sucesso!"
 				fi
 			else
-				echo "Erro na instalação."
+				pause "Erro na instalação.. Tecle [Enter] para continuar." ; menu_laucher
 			fi
 		fi
 	fi
@@ -337,10 +387,11 @@ desativar_laucher(){
 			if [ "$?" -qe 0 ]; then
 				echo "Configurado o Laucher padrão do Android TV com sucesso!"
 			else
-				echo "Erro abrir o Laucher padrão. Verifique sua conexão ou tente mais tarde."
+				pause "Erro abrir o Laucher padrão, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 			fi
 		else
 			echo "Seu Laucher ATV PRO MOD já está desativado."
+			pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
 		fi
 	else
 		echo "Laucher ATV PRO MOD ainda não instalado."
@@ -578,7 +629,7 @@ menu_principal(){
 			3 ) menu_ativar_desativar ;;
 			4 ) menu_laucher ;;
 			5 ) menu_install_apps ;;
-			6 ) exit ; adb disconnect $IP >/dev/null ;;
+			6 ) exit ; adb disconnect $IP >/dev/null ; exit ;;
 			* ) clear; echo "Por favor escolha 1, 2, 3, 4, 5 ou 6"; 
 		esac
 	done
