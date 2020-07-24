@@ -6,28 +6,36 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.17"
+VER="v0.0.18"
 
 # Definição de Cores
-RED001='\e[38;5;1m'
-CYA122='\e[38;5;122m'
-CYA044='\e[38;5;44m'
-ROX063='\e[38;5;63m'
-ROX027='\e[38;5;27m'
-GRE046='\e[38;5;46m'
-GRY247='\e[38;5;247m'
-LAR208='\e[38;5;208m'
-LAR214='\e[38;5;214m'
-CIN='\e[30;1m'
-RED='\e[31;1m'
-GRE='\e[32;1m'
-YEL='\e[33;1m'
-BLU='\e[34;1m'
-ROS='\e[35;1m'
-CYA='\e[36;1m'
-NEG='\e[37;1m'
-CUI='\e[40;31;5m'
-STD='\e[m'
+# Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
+
+# Cores degrade
+RED001='\e[38;5;1m'		# Vermelho 1
+CYA122='\e[38;5;122m'	# Ciano 122
+CYA044='\e[38;5;44m'	# Ciano 44
+ROX063='\e[38;5;63m'	# Roxo 63
+ROX027='\e[38;5;27m'	# Roxo 27
+GRE046='\e[38;5;46m'	# Verde 46
+GRY247='\e[38;5;247m'	# Cinza 247
+LAR208='\e[38;5;208m'	# Laranja 208
+LAR214='\e[38;5;214m'	# Laranja 214
+AMA226='\e[38;5;226m'	# Amarelo 226
+MAR094='\e[38;5;94m'	# Marrom 94
+MAR136='\e[38;5;136m'	# Marrom 136
+
+# Cores chapadas
+CIN='\e[30;1m'			# Cinza
+RED='\e[31;1m'			# Vermelho
+GRE='\e[32;1m'			# Verde
+YEL='\e[33;1m'			# Amarelo
+BLU='\e[34;1m'			# Azul
+ROS='\e[35;1m'			# Rosa
+CYA='\e[36;1m'			# Ciano
+NEG='\e[37;1m'			# Negrito
+CUI='\e[40;31;5m'		# Vermelho pisacando, aviso!
+STD='\e[m'				# Fechamento de cor
 
 # --- Início Funções ---
 
@@ -87,9 +95,10 @@ erro_conexao(){
 conectar_tv(){
 	clear
 	echo " Digite o endereço IP da sua TV que encontra no"
-	echo " caminho abaixo e tecle [Enter] para continuar:"	
-	echo -e " ${NEG}Configurações${STD}, ${NEG}Preferências do dispositivo${STD},"
-	echo -e " ${NEG}Sobre${STD}, ${NEG}Status${STD}."
+	echo " caminho abaixo e tecle [Enter] para continuar:"
+	echo ""
+	echo -e " ${AMA226}Configurações${STD}, ${AMA226}Preferências do dispositivo${STD},"
+	echo -e " ${AMA226}Sobre${STD}, ${AMA226}Status${STD}."
 	read IP
 
 	ping -c 1 $IP >/dev/null
@@ -549,9 +558,9 @@ menu_principal(){
 			fi
 		fi
 		echo ""
-		echo -e " ${NEG}Este script possui a finalidade de otimizar${STD}"
-		echo -e " ${NEG}o sistema Android TV, removendo e desativando${STD}"
-		echo -e " ${NEG}alguns apps e instalando outros.${STD}"
+		echo -e " ${MAR136}Este script possui a finalidade de otimizar${STD}"
+		echo -e " ${MAR136}o sistema Android TV, removendo e desativando${STD}"
+		echo -e " ${MAR136}alguns apps e instalando outros.${STD}"
 		echo ""
 		echo -e " ${CUI}FAÇA POR SUA CONTA E RISCO${STD}"
 		echo ""
