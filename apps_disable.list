@@ -1,0 +1,21 @@
+com.tcl.tv|TV Digital Aberta
+com.tcl.gallery|Galeria Inteligente
+com.tcl.appmarket2|Background Service
+com.tcl.ui_mediaCenter|Central de Mídia
+com.tcl.messagebox|widget do sistema que faz overlay de música tocando, marca na tela quando é colocado algo na usb
+com.tcl.notereminder|Mensagem
+com.tcl.partnercustomizer|TCL Channel
+com.tcl.usercenter|User Center
+com.tcl.partnercustomizer.resource|T-Channel
+com.tcl.smartalexa|Assistente de voz Alexa
+com.tcl.MultiScreenInteraction_TV|Controla a TV pelo SmartFone
+com.android.providers.contacts|Armazenamento de Contatos
+com.google.android.feedback|Comente sobre o Market
+com.google.android.tv.bugreportsender|Bug Report Sender
+com.google.android.youtube.tv|Youtube Nativo
+com.google.android.tvrecommendations|Android TV Core Services
+com.google.android.leanbacklauncher.recommendations|Exibe recomendações chatas (não dos apps que você usa), mas de parceiros do google
+com.google.android.tv.remote.service|Apk que atualiza o firmware do controle, porém é um apk morto que fica rodando no background inútil
+com.google.android.music|Música Google
+com.google.android.videos|Vídeos Google
+com.google.android.play.games|Games Google

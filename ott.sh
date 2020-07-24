@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.14 - alpha"
+VER="v0.0.15 - alpha"
 
 # Definição de Cores
 RED001='\e[38;5;1m'
@@ -86,9 +86,10 @@ erro_conexao(){
 # Conexão da TV
 conectar_tv(){
 	clear
-	echo " Digite o endereço IP da sua TV que encontra-se"
-	echo " no caminho abaixo e tecle [Enter] para continuar:"	
-	echo -e " ${NEG}Configurações${STD}, ${NEG}Preferências do dispositivo${STD}, ${NEG}Sobre${STD}, ${NEG}Status${STD}."
+	echo " Digite o endereço IP da sua TV que encontra no"
+	echo " caminho abaixo e tecle [Enter] para continuar:"	
+	echo -e " ${NEG}Configurações${STD}, ${NEG}Preferências do dispositivo${STD},"
+	echo -e " ${NEG}Sobre${STD}, ${NEG}Status${STD}."
 	read IP
 
 	ping -c 1 $IP >/dev/null
@@ -108,14 +109,14 @@ conectar_tv(){
 	fi
 }
 
-# Remover apps
-rm_apps_lixo(){
+# Remover apps P8M
+rm_apps_p8m(){
 	clear
 	OIFS=$IFS
 	IFS=$'\n'
 	# Verifica se o arquivo existe
-	if [ -e "appsremove.list" ]; then
-		for app_rm in $(cat appsremove.list); do
+	if [ -e "rm_apps_p8m.list" ]; then
+		for app_rm in $(cat rm_apps_p8m.list); do
 			adb shell pm uninstall --user 0 $app_rm >/dev/null
 			if [ "$(adb shell pm uninstall --user 0 $app_rm)" = "Success" ]; then
 				echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} removido com sucesso!" && sleep 1
@@ -126,9 +127,46 @@ rm_apps_lixo(){
 	else
 		# Baixar lista lixo dos apps
 		echo "Aguarde, baixando lista negra de apps..." && sleep 1
-		wget --content-disposition wget https://cloud.talesam.org/s/BQmMCiXMnGsZyLE/download
-		if [ -e "appsremove.list" ]; then
-			for app_rm in $(cat appsremove.list); do
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_p8m.list
+		if [ -e "rm_apps_p8m.list" ]; then
+			for app_rm in $(cat rm_apps_p8m.list); do
+				adb shell pm uninstall --user 0 $app_rm >/dev/null
+				if [ "$(adb shell pm uninstall --user 0 $app_rm)" = "Success" ]; then
+					echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} removido com sucesso!" && sleep 1
+				else
+					echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe"
+				fi
+			done
+		else
+			echo "Erro ao baixar a lista LIXO dos apps. Verifique sua conexão."
+		fi
+	fi
+	echo ""
+	pause " Tecle [Enter] para retornar ao menu principal..." ; menu_principal
+IFS=$OIFS
+}
+
+# Remover apps S6500
+rm_apps_S6500(){
+	clear
+	OIFS=$IFS
+	IFS=$'\n'
+	# Verifica se o arquivo existe
+	if [ -e "rm_apps_S6500.list" ]; then
+		for app_rm in $(cat rm_apps_S6500.list); do
+			adb shell pm uninstall --user 0 $app_rm >/dev/null
+			if [ "$(adb shell pm uninstall --user 0 $app_rm)" = "Success" ]; then
+				echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} removido com sucesso!" && sleep 1
+			else
+				echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe"
+			fi
+		done
+	else
+		# Baixar lista lixo dos apps
+		echo "Aguarde, baixando lista negra de apps..." && sleep 1
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_S6500.list
+		if [ -e "rm_apps_S6500.list" ]; then
+			for app_rm in $(cat rm_apps_S6500.list); do
 				adb shell pm uninstall --user 0 $app_rm >/dev/null
 				if [ "$(adb shell pm uninstall --user 0 $app_rm)" = "Success" ]; then
 					echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} removido com sucesso!" && sleep 1
@@ -156,7 +194,7 @@ ativar() {
 	
 	apk_disabled="$(adb shell pm list packages -d | cut -f2 -d:)"
 
-	for apk_full in $(cat apps.list); do
+	for apk_full in $(cat apps_disable.list); do
 		    apk="$(echo "$apk_full" | cut -f1 -d"|")"
 		    apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 
@@ -177,8 +215,8 @@ desativar() {
 	
 	apk_disabled="$(adb shell pm list packages -d | cut -f2 -d:)"
 	# Verifica se o arquivo existe no diretório local
-	if [ -e "apps.list" ]; then
-		for apk_full in $(cat apps.list); do
+	if [ -e "apps_disable.list" ]; then
+		for apk_full in $(cat apps_disable.list); do
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
 				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 
@@ -190,9 +228,9 @@ desativar() {
 	else
 		# Baixar lista de apps para serem desativados
 		echo "Aguarde, baixando lista de apps..." && sleep 1
-		wget --content-disposition wget https://cloud.talesam.org/s/gagwfbt4qq8Z2wk/download
-		if [ -e "apps.list" ]; then
-			for apk_full in $(cat apps.list); do
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/apps_disable.list
+		if [ -e "apps_disable.list" ]; then
+			for apk_full in $(cat apps_disable.list); do
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
 				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 
@@ -236,7 +274,7 @@ install_laucher(){
 			fi
 		fi
 	else
-		echo "Aguarde a instalação do seu novo Laucher ATV PRO MOD..." && sleep 2
+		echo "Aguarde a instalação do novo Laucher ATV PRO MOD..." && sleep 2
 		# Baixa o Laucher ATV PRO modificado e o Widget
 		echo "Baixando a versão mais recente do Laucher ATV PRO MOD e Widget..."
 		wget --content-disposition https://cloud.talesam.org/s/ZMz79soxAa7MYii/download
@@ -518,19 +556,21 @@ menu_principal(){
 		echo -e " ${CUI}FAÇA POR SUA CONTA E RISCO${STD}"
 		echo ""
 		echo -e " ${BLU}1.$STD ${RED001}Remover apps lixo (P8M)${STD}"
-		echo -e " ${BLU}2.$STD ${GRY247}Desativar/Ativar apps${STD}"
-		echo -e " ${BLU}3.$STD ${ROX027}Launcher ATV Pro TCL Mod + Widget${STD}"
-		echo -e " ${BLU}4.$STD ${GRE046}Instalar novos apps${STD}"
-		echo -e " ${BLU}5.$STD ${RED}Sair${STD}"
+		echo -e " ${BLU}2.$STD ${RED001}Remover apps lixo (S6500)${STD}"
+		echo -e " ${BLU}3.$STD ${GRY247}Desativar/Ativar apps${STD}"
+		echo -e " ${BLU}4.$STD ${ROX027}Launcher ATV Pro TCL Mod + Widget${STD}"
+		echo -e " ${BLU}5.$STD ${GRE046}Instalar novos apps${STD}"
+		echo -e " ${BLU}6.$STD ${RED}Sair${STD}"
 		echo ""
 		read -p " Digite um número e tecle [Enter]:" option
 		case "$option" in
-			1 ) rm_apps_lixo ;;
-			2 ) menu_ativar_desativar ;;
-			3 ) menu_laucher ;;
-			4 ) menu_install_apps ;;
-			5 ) exit ; adb disconnect $IP >/dev/null ;;
-			* ) clear; echo "Por favor escolha 1, 2, 3, 4 ou 5"; 
+			1 ) rm_apps_p8m ;;
+			2 ) rm_apps_S6500 ;;
+			3 ) menu_ativar_desativar ;;
+			4 ) menu_laucher ;;
+			5 ) menu_install_apps ;;
+			6 ) exit ; adb disconnect $IP >/dev/null ;;
+			* ) clear; echo "Por favor escolha 1, 2, 3, 4, 5 ou 6"; 
 		esac
 	done
 }
