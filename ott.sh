@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.16"
+VER="v0.0.17"
 
 # Definição de Cores
 RED001='\e[38;5;1m'
@@ -118,9 +118,8 @@ rm_apps_p8m(){
 	if [ -e "rm_apps_p8m.list" ]; then
 		for app_rm in $(cat rm_apps_p8m.list); do
 			adb shell pm uninstall --user 0 $app_rm >/dev/null
-			#if [ "$(adb shell pm uninstall --user 0 $app_rm)" = "Success" ]; then
 			if [ "$?" -eq 0 ]; then
-				echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} removido com sucesso!" && sleep 1
+				echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 			else
 				echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe"
 			fi
@@ -132,9 +131,8 @@ rm_apps_p8m(){
 		if [ -e "rm_apps_p8m.list" ]; then
 			for app_rm in $(cat rm_apps_p8m.list); do
 				adb shell pm uninstall --user 0 $app_rm >/dev/null
-				#if [ "$(adb shell pm uninstall --user 0 $app_rm)" = "Success" ]; then
 				if [ "$?" -eq 0 ]; then
-					echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} removido com sucesso!" && sleep 1
+					echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 				else
 					echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe"
 				fi
@@ -157,8 +155,8 @@ rm_apps_S6500(){
 	if [ -e "rm_apps_S6500.list" ]; then
 		for app_rm in $(cat rm_apps_S6500.list); do
 			adb shell pm uninstall --user 0 $app_rm >/dev/null
-			if [ "$(adb shell pm uninstall --user 0 $app_rm)" = "Success" ]; then
-				echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} removido com sucesso!" && sleep 1
+			if [ "$?" -eq 0 ]; then
+				echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 			else
 				echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe"
 			fi
@@ -170,8 +168,8 @@ rm_apps_S6500(){
 		if [ -e "rm_apps_S6500.list" ]; then
 			for app_rm in $(cat rm_apps_S6500.list); do
 				adb shell pm uninstall --user 0 $app_rm >/dev/null
-				if [ "$(adb shell pm uninstall --user 0 $app_rm)" = "Success" ]; then
-					echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} removido com sucesso!" && sleep 1
+				if [ "$?" -eq 0 ]; then
+					echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 				else
 					echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe"
 				fi
