@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.25"
+VER="v0.0.26"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -65,7 +65,7 @@ termux(){
 	else
 		echo " Baixando dependências para utilizar o script no Termux"
 		echo " Nas pŕoximas telas, tecle [Y], quando necessário, para continuar..." ; sleep 2
-		apt update && apt install wget && wget https://raw.githubusercontent.com/MasterDevX/Termux-ADB/master/InstallTools.sh && bash InstallTools.sh
+		apt update && apt install wget && wget https://raw.githubusercontent.com/MasterDevX/Termux-ADB/master/InstallTools.sh && bash InstallTools.sh && clear
 		if [ "$?" -eq 0 ]; then
 			echo "Instalação conluida com sucesso!"
 			pause " Tecle [Enter] para se conectar a TV..." ; conectar_tv
@@ -123,7 +123,7 @@ rm_apps_p8m(){
 	else
 		# Baixar lista lixo dos apps
 		echo "Aguarde, baixando lista negra de apps..." && sleep 1
-		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_p8m.list
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_p8m.list && clear
 		if [ -e "rm_apps_p8m.list" ]; then
 			for app_rm in $(cat rm_apps_p8m.list); do
 				adb shell pm uninstall --user 0 $app_rm >/dev/null
@@ -160,7 +160,7 @@ rm_apps_S6500(){
 	else
 		# Baixar lista lixo dos apps
 		echo "Aguarde, baixando lista negra de apps..." && sleep 1
-		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_S6500.list
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_S6500.list && clear
 		if [ -e "rm_apps_S6500.list" ]; then
 			for app_rm in $(cat rm_apps_S6500.list); do
 				adb shell pm uninstall --user 0 $app_rm >/dev/null
@@ -195,7 +195,7 @@ ativar() {
 			apk="$(echo "$apk_full" | cut -f1 -d"|")"
 			apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 			if [ "$(echo "$apk_disabled" | grep "$apk")" != "" ]; then
-				echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite S(Sim) para ATIVAR ou N(Não) para manter DESATIVADO"
+					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRE046}S${STD}(Sim) para ${GRE046}ATIVAR${STD} ou ${GRY247}N${STD}(Não) para manter ${GRY247}DESATIVADO${STD}"
 				pergunta_ativar
 			fi
 		done
@@ -208,7 +208,7 @@ ativar() {
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
 				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 				if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
-					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite S(Sim) para ATIVAR ou N(Não) para manter ATIVO"
+					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRE046}S${STD}(Sim) para ${GRE046}ATIVAR${STD} ou ${GRY247}N${STD}(Não) para manter ${GRY247}DESATIVADO${STD}"
 					pergunta_ativar
 				fi
 			done
@@ -227,7 +227,7 @@ pergunta_ativar() {
 }
 
 resposta_ativar() {
-	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${ROX027}"Saída do Comando ${apk}${STD}";adb shell pm enable ${apk};}
+	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${LAR208}"Informação sobre o pacote${STD} ${CYA044}${apk}${STD}";adb shell pm enable ${apk};}
 }
 
 desativar() {
@@ -243,7 +243,7 @@ desativar() {
 			apk="$(echo "$apk_full" | cut -f1 -d"|")"
 			apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 			if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
-				echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite S(Sim) para DESATIVAR ou N(Não) para manter ATIVO"
+				echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRY247}S${STD}(Sim) para ${GRY247}DESATIVAR${STD} ou ${GRE046}N${STD}(Não) para manter ${GRE046}ATIVO${STD}"
 				pergunta_desativar
 			fi
 		done
@@ -256,7 +256,7 @@ desativar() {
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
 				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 				if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
-					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite S(Sim) para DESATIVAR ou N(Não) para manter ATIVO"
+					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRY247}S${STD}(Sim) para ${GRY247}DESATIVAR${STD} ou ${GRE046}N${STD}(Não) para manter ${GRE046}ATIVO${STD}"
 					pergunta_desativar
 				fi
 			done
@@ -275,7 +275,7 @@ pergunta_desativar() {
 }
 
 resposta_desativar() {
-	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${ROX027}"Saída do Comando ${apk}${STD}";adb shell pm disable-user --user 0 ${apk};}
+	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${LAR208}"Informação sobre o pacote${STD} ${CYA044}${apk}${STD}";adb shell pm disable-user --user 0 ${apk};}
 }
 
 linha() {
@@ -346,7 +346,7 @@ install_laucher(){
 		# Baixa o Laucher ATV PRO modificado e o Widget
 		echo "Baixando a versão mais recente do Laucher ATV PRO MOD e Widget..."
 		wget --content-disposition https://cloud.talesam.org/s/ZMz79soxAa7MYii/download
-		wget --content-disposition https://cloud.talesam.org/s/S8tJqBiiKmog4wt/download
+		wget --content-disposition https://cloud.talesam.org/s/S8tJqBiiKmog4wt/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
 		else
@@ -419,7 +419,7 @@ install_aptoidetv(){
 	else
 		# Baixa o Apdoide TV
 		echo "Baixando Aptoide TV..." && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/j5ZbDP5yL2DAT9J/download
+		wget --content-disposition https://cloud.talesam.org/s/j5ZbDP5yL2DAT9J/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
 		else
@@ -442,7 +442,7 @@ install_deezermod(){
 	else
 		# Baixa o Apdoide TV
 		echo "Baixando Deezer MOD..." && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/8eBw4HGZryFyssf/download
+		wget --content-disposition https://cloud.talesam.org/s/8eBw4HGZryFyssf/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
 		else
@@ -465,7 +465,7 @@ install_spotify(){
 	else
 		# Baixa o Spotify
 		echo "Baixando Spotify..." && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/t8w48i6px9b4FfZ/download
+		wget --content-disposition https://cloud.talesam.org/s/t8w48i6px9b4FfZ/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
 		else
@@ -488,7 +488,7 @@ install_tvbro(){
 	else
 		# Baixa o TV Bro
 		echo "Baixando TV Bro..." && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/SSC5C4QrPN7BzqZ/download
+		wget --content-disposition https://cloud.talesam.org/s/SSC5C4QrPN7BzqZ/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
 		else
@@ -511,7 +511,7 @@ install_smartyoutube(){
 	else
 		# Baixa o Smart Youtube
 		echo "Baixando Smart Youtube..." && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/2S86QiiEm3ET8ss/download
+		wget --content-disposition https://cloud.talesam.org/s/2S86QiiEm3ET8ss/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
 		else
@@ -534,7 +534,7 @@ install_sendfiles(){
 	else
 		# Baixa o Send Files
 		echo "Baixando Send Files..." && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/NwHy9Fe3AxYNLrL/download
+		wget --content-disposition https://cloud.talesam.org/s/NwHy9Fe3AxYNLrL/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
 		else
@@ -557,7 +557,7 @@ install_stremio(){
 	else
 		# Baixa o Stremio
 		echo "Baixando Stremio..." && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/Ej3B9n4GajL5xPw/download
+		wget --content-disposition https://cloud.talesam.org/s/Ej3B9n4GajL5xPw/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
 		else
@@ -580,7 +580,7 @@ install_xplore(){
 	else
 		# Baixa o X-Plore
 		echo "Baixando X-Plore..." && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/LQXxP96zFj2QscL/download
+		wget --content-disposition https://cloud.talesam.org/s/LQXxP96zFj2QscL/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
 		else
@@ -626,7 +626,7 @@ menu_principal(){
 		echo ""
 		echo -e " ${BLU}1.$STD ${RED001}Remover apps lixo (P8M)${STD}"
 		echo -e " ${BLU}2.$STD ${RED001}Remover apps lixo (S6500)${STD}"
-		echo -e " ${BLU}3.$STD ${GRY247}Desativar/Ativar apps${STD}"
+		echo -e " ${BLU}3.$STD ${GRY247}Desativar${STD}/${GRE046}Ativar apps${STD}"
 		echo -e " ${BLU}4.$STD ${ROX027}Launcher ATV Pro TCL Mod + Widget${STD}"
 		echo -e " ${BLU}5.$STD ${GRE046}Instalar novos apps${STD}"
 		echo -e " ${BLU}6.$STD ${RED}Sair${STD}"
@@ -707,7 +707,7 @@ menu_install_apps(){
 		echo -e " ${BLU}6.${STD} Send Files"
 		echo -e " ${BLU}7.${STD} Stremio"
 		echo -e " ${BLU}8.${STD} X-Plore"
-		echo -e " ${BLU}9.${STD} Retornar ao Menu Principal"
+		echo -e " ${BLU}9.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
 		echo ""
 		read -p " Digite um número:" option
 		case $option in
