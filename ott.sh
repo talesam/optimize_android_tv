@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Otimizações Android TV
 # Por Tales A. Mendonça - talesam@gmail.com
-# Agradecimento ao Bruno Gonçalvez Araujo, BigBruno, por algumas contribuições no código
+# Agradecimento ao Bruno Gonçalvez Araujo, Rodrigo Carpes e @gr1m
 # https://developer.android.com/studio/command-line/adb
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.26"
+VER="v0.0.30"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -63,15 +63,15 @@ termux(){
 		echo -e " ${GRE046}Dependencias encontradas, conecte-se na TV.${STD}"
 		pause " Tecle [Enter] para continuar..." ; conectar_tv
 	else
-		echo " Baixando dependências para utilizar o script no Termux"
-		echo " Nas pŕoximas telas, tecle [Y], quando necessário, para continuar..." ; sleep 2
-		apt update && apt install wget && wget https://raw.githubusercontent.com/MasterDevX/Termux-ADB/master/InstallTools.sh && bash InstallTools.sh && clear
-		if [ "$?" -eq 0 ]; then
-			echo "Instalação conluida com sucesso!"
+		echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script no Termux...${SDT}" && sleep 2
+		apt update && apt -y install wget && wget https://raw.githubusercontent.com/MasterDevX/Termux-ADB/master/InstallTools.sh && bash InstallTools.sh && clear
+		if [ "$?" -eq "0" ]; then
+			echo ""
+			echo -e " ${GRE}*${STD} ${NEG}Instalação conluida com sucesso!${STD}"
 			pause " Tecle [Enter] para se conectar a TV..." ; conectar_tv
 		else
-			echo " Erro ao baixar e instalar as dependências"
-			echo " Verifique sua conexão e tente novamente." ; exit 0
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar e instalar as dependências.\n Verifique sua conexão e tente novamente.${STD}" ; exit 0
 		fi
 	fi
 }
@@ -88,20 +88,21 @@ conectar_tv(){
 
 	ping -c 1 $IP >/dev/null
 	# Testa se a TV está ligada com o modo depuração ativo
-	if [ "$?" -eq 0 ]; then
+	if [ "$?" -eq "0" ]; then
 		echo ""
 		echo -e " ${LAR214}Conectando-se a sua TV...${STD}" && sleep 3
 		adb connect $IP >/dev/null
-		if [ "$?" -eq 0 ]; then
+		if [ "$?" -eq "0" ]; then
+			echo ""
 			echo -e " ${GRE046}Conectado com sucesso a TV!${STD}" && sleep 3 ; menu_principal
 			echo ""
 		else
-			echo -e "  ${RED}*${STD} Erro! Falha na conexão, Verifique seu endereço de IP"
-			pause "Tecle [Enter] para tentar novamente..." ; conectar_tv
+			echo -e " ${RED}*${STD} ${NEG}Erro! Falha na conexão, Verifique seu endereço de IP${STD}"
+			pause " Tecle [Enter] para tentar novamente..." ; conectar_tv
 		fi
 	else
-			echo -e "  ${RED}*${STD} Erro! Falha na conexão, Verifique seu endereço de IP"
-			pause "Tecle [Enter] para tentar novamente..." ; conectar_tv
+			echo -e " ${RED}*${STD} ${NEG}Erro! Falha na conexão, Verifique seu endereço de IP${STD}"
+			pause " Tecle [Enter] para tentar novamente..." ; conectar_tv
 	fi
 }
 
@@ -114,27 +115,29 @@ rm_apps_p8m(){
 	if [ -e "rm_apps_p8m.list" ]; then
 		for app_rm in $(cat rm_apps_p8m.list); do
 			adb shell pm uninstall --user 0 $app_rm >/dev/null
-			if [ "$?" -eq 0 ]; then
-				echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
+			if [ "$?" -eq "0" ]; then
+				echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 			else
-				echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
+				echo -e " ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
 			fi
 		done
 	else
 		# Baixar lista lixo dos apps
-		echo "Aguarde, baixando lista negra de apps..." && sleep 1
+		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista negra de apps...${STD}" && sleep 2
 		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_p8m.list && clear
 		if [ -e "rm_apps_p8m.list" ]; then
 			for app_rm in $(cat rm_apps_p8m.list); do
 				adb shell pm uninstall --user 0 $app_rm >/dev/null
-				if [ "$?" -eq 0 ]; then
-					echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
+				if [ "$?" -eq "0" ]; then
+					echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 				else
-					echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
+					echo -e " ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
 				fi
 			done
 		else
-			echo "Erro ao baixar a lista LIXO dos apps. Verifique sua conexão."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar a lista LIXO dos apps. Verifique sua conexão.${STD}"
+			echo ""
 		fi
 	fi
 	echo ""
@@ -151,27 +154,29 @@ rm_apps_S6500(){
 	if [ -e "rm_apps_S6500.list" ]; then
 		for app_rm in $(cat rm_apps_S6500.list); do
 			adb shell pm uninstall --user 0 $app_rm >/dev/null
-			if [ "$?" -eq 0 ]; then
-				echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
+			if [ "$?" -eq "0" ]; then
+				echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 			else
-				echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
+				echo -e " ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
 			fi
 		done
 	else
 		# Baixar lista lixo dos apps
-		echo "Aguarde, baixando lista negra de apps..." && sleep 1
+		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista negra de apps...${STD}" && sleep 2
 		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_S6500.list && clear
 		if [ -e "rm_apps_S6500.list" ]; then
 			for app_rm in $(cat rm_apps_S6500.list); do
 				adb shell pm uninstall --user 0 $app_rm >/dev/null
-				if [ "$?" -eq 0 ]; then
-					echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
+				if [ "$?" -eq "0" ]; then
+					echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 				else
-					echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
+					echo -e " ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
 				fi
 			done
 		else
-			echo "Erro ao baixar a lista LIXO dos apps. Verifique sua conexão."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar a lista LIXO dos apps. Verifique sua conexão.${STD}"
+			echo ""
 		fi
 	fi
 	echo ""
@@ -201,7 +206,8 @@ ativar() {
 		done
 	else
 		# Baixar lista de apps para serem desativados
-		echo "Aguarde, baixando lista de apps..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista de apps...${STD}" && sleep 1
 		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/apps_disable.list
 		if [ -e "apps_disable.list" ]; then
 			for apk_full in $(cat apps_disable.list); do
@@ -213,7 +219,9 @@ ativar() {
 				fi
 			done
 		else
-			echo "Erro ao baixar a lista de apps. Verifique sua conexão."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar a lista de apps. Verifique sua conexão.${STD}"
+			echo ""
 			pause " Tecle [Enter] para retornar ao menu principal..." ; menu_principal
 		fi
 	fi
@@ -249,7 +257,8 @@ desativar() {
 		done
 	else
 		# Baixar lista de apps para serem desativados
-		echo "Aguarde, baixando lista de apps..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista de apps...${STD}" && sleep 1
 		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/apps_disable.list
 		if [ -e "apps_disable.list" ]; then
 			for apk_full in $(cat apps_disable.list); do
@@ -261,7 +270,9 @@ desativar() {
 				fi
 			done
 		else
-			echo "Erro ao baixar a lista de apps. Verifique sua conexão."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar a lista de apps. Verifique sua conexão.${STD}"
+			echo ""
 			pause " Tecle [Enter] para retornar ao menu principal..." ; menu_principal
 		fi
 	fi
@@ -287,125 +298,167 @@ linha() {
 install_laucher(){
 	# Remove versão do ATV PRO
 	if [ "$(adb shell pm list packages -u | cut -f2 -d: | grep ca.dstudio.atvlauncher.pro)" != "" ]; then
-		echo "Removendo versão do Laucher ATV PRO..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Removendo versão do Laucher ATV PRO...${STD}" && sleep 1
+		echo ""
 		adb shell pm uninstall --user 0 ca.dstudio.atvlauncher.pro
-		if [ "$?" -eq 0 ]; then
-			echo "Laucher ATV PRO removido com sucesso!"
+		if [ "$?" -eq "0" ]; then
+			echo -e " ${GRE}*${STD} ${NEG}Laucher ATV PRO removido com sucesso!${STD}"
 		else
-			echo "Você não possui o Laucher ATV PRO instalado."
-			pause "Tecle [Enter] para continuar com a instalação..."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao remover Laucher ATV PRO.${STD}"
+			pause " Tecle [Enter] para continuar com a instalação..."
 		fi
 	fi
 
 	# Remove versão do ATV FREE
 	if [ "$(adb shell pm list packages -u | cut -f2 -d: | grep ca.dstudio.atvlauncher.pro)" != "" ]; then
-		echo "Removendo versão do Laucher ATV FRE..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Removendo versão do Laucher ATV FRE...${STD}" && sleep 1
+		echo ""
 		adb shell pm uninstall --user 0 ca.dstudio.atvlauncher.free
-		if [ "$?" -eq 0 ]; then
-			echo "Laucher ATV PRO removido com sucesso!"
+		if [ "$?" -eq "0" ]; then
+			echo -e " ${GRE}*${STD} ${NEG}Laucher ATV FREE removido com sucesso!${STD}"
 		else
-			echo "Você não possui o Laucher ATV FRE instalado."
-			pause "Tecle [Enter] para continuar com a instalação..."
+			echo -e " ${RED}*${STD} ${NEG}Erro ao remover Laucher ATV FREE.${STD}"
+			pause " Tecle [Enter] para continuar com a instalação..."
 		fi
 	fi
 
 	if [ "$(adb shell pm list packages -u | cut -f2 -d: | grep com.tcl.home)" != "" ]; then
 		if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.tcl.home)" = "" ]; then
-			echo "Ativando Laucher ATV PRO MOD..." && sleep 1
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Ativando Laucher ATV PRO MOD...${STD}" && sleep 1
 			adb shell pm enable com.tcl.home
-			if [ "$?" -eq 0 ]; then
+			if [ "$?" -eq "0" ]; then
 				# Desativa o laucher padrão
 				adb shell pm disable-user --user 0 com.google.android.tvlauncher
 				if [ "$(adb shell pm disable-user --user 0 com.google.android.tvlauncher | grep disabled-user | cut -f5 -d " ")" = "disabled-user" ]; then
-					echo "Laucher ATV PRO MOD ativo com sucesso!"
 					echo ""
-					echo "Iniciando a nova Laucher ATV PRO MOD..." && sleep 2
+					echo -e " ${GRE}*${STD} ${NEG}Laucher ATV PRO MOD ativo com sucesso!${STD}"
+					echo ""
+					echo -e " ${BLU}*${STD} ${NEG}Iniciando a nova Laucher ATV PRO MOD, aguarde...${STD}" && sleep 1
 					adb shell monkey -p com.tcl.home -c android.intent.category.LAUNCHER 1
-					if [ "$?" -eq 0 ]; then
-						echo "Laucher ATV PRO MOD iniciada com sucesso!" && sleep 1
-						echo "Atualizando as permissões..."
+					if [ "$?" -eq "0" ]; then
+						echo ""
+						echo -e " ${GRE}*${STD} ${NEG}Laucher ATV PRO MOD iniciado com sucesso!${STD}" && sleep 1
+						echo ""
+						echo -e " ${BLU}*${STD} ${NEG}Atualizando as permissões...${STD}"
 						# Seta permissão para o widget
 						adb shell appwidget grantbind --package com.tcl.home --user 0
-						if [ "$?" -eq 0 ]; then
-							echo "Permissões atualizadas com sucesso!"
+						if [ "$?" -eq "0" ]; then
+							echo ""
+							echo -e " ${GRE}*${STD} ${NEG}Permissões atualizadas com sucesso!${STD}"
 						else
-							pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+							pause " Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 						fi
 					else
-						pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+						pause " Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 					fi
 				else
-					pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+					pause " Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 				fi
 			else
-				pause "Erro ao ativar Laucher ATV MOD. Tecle [Enter] para retornar ao menu" ; menu_laucher
+				pause " Erro ao ativar Laucher ATV MOD. Tecle [Enter] para retornar ao menu" ; menu_laucher
 			fi	
 		fi
 	else
-		echo "Aguarde a instalação do novo Laucher ATV PRO MOD..." && sleep 2
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Aguarde a instalação do novo Laucher ATV PRO MOD...${STD}" && sleep 2
 		# Baixa o Laucher ATV PRO modificado e o Widget
-		echo "Baixando a versão mais recente do Laucher ATV PRO MOD e Widget..."
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Baixando a versão mais recente do Laucher ATV PRO MOD e Widget...${STD}"
 		wget --content-disposition https://cloud.talesam.org/s/ZMz79soxAa7MYii/download
 		wget --content-disposition https://cloud.talesam.org/s/S8tJqBiiKmog4wt/download && clear
 		if [ "$?" -ne 0 ]; then
-			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
+			pause " Erro ao baixar os arquivos, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_laucher
 		else
-			echo "Instalando o novo Laucher, aguarde..."
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o novo Laucher, aguarde...${STD}" && sleep 1
 			adb install -r tclhome.apk
 			adb install -r chronus.apk
 			#if [ "$(adb install -r tclhome.apk | grep "Success")" = "Success" && "$(adb install -r chronus.apk | grep "Success")" = "Success" ]; then
-			if [ "$?" -eq 0 ]; then
-				echo "Laucher ATV PRO MOD instalado com sucesso!"
-				echo "Ativando o novo Laucher, aguarde..." && sleep 2
+			if [ "$?" -eq "0" ]; then
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Laucher ATV PRO MOD instalado com sucesso!${STD}"
+				echo ""
+				echo -e " ${BLU}*${STD} ${NEG}Ativando o novo Laucher, aguarde...${STD}" && sleep 1
 				# Desativa o laucher padrão
 				adb shell pm disable-user --user 0 com.google.android.tvlauncher
 				if [ "$(adb shell pm disable-user --user 0 com.google.android.tvlauncher | grep disabled-user | cut -f5 -d " ")" = "disabled-user" ]; then
 					echo "Laucher ATV PRO MOD ativo com sucesso!"
 					echo "Ativando a nova Laucher ATV PRO MOD..." && sleep 2
 					adb shell monkey -p com.tcl.home -c android.intent.category.LAUNCHER 1
-					if [ "$?" -eq 0 ]; then
-						echo "Laucher ATV PRO MOD ativado com sucesso!"
-						echo "Abrindo Laucher ATV PRO MOD..." && sleep 1
+					if [ "$?" -eq "0" ]; then
+						echo ""
+						echo -e " ${GRE}*${STD} ${NEG}Laucher ATV PRO MOD ativado com sucesso!${STD}"
+						echo ""
+						echo -e " ${BLU}*${STD} ${NEG}Abrindo Laucher ATV PRO MOD...${STD}" && sleep 1
 					else
-						pause "Erro ao ativar o Laucher ATV PRO, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+						pause " Erro ao ativar o Laucher ATV PRO, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 					fi
 				else
-					pause "Erro ao ativar o Laucher ATV PRO, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+					pause " Erro ao ativar o Laucher ATV PRO, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 				fi
-				echo "Atualizando as permissões..."
+				echo ""
+				echo -e " ${BLU}*${STD} ${NEG}Atualizando as permissões...${STD}" && sleep 1
 				# Seta permissão para o widget
 				adb shell appwidget grantbind --package com.tcl.home --user 0
-				if [ "$?" -ne 0 ]; then
-					pause "Erro ao setar permissões, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+				if [ "$?" -ne "0" ]; then
+					pause " Erro ao setar permissões, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 				else
-					echo "Permissões atualizadas com sucesso!"
+					echo -e " ${GRE}*${STD} ${NEG}Permissões atualizadas com sucesso!${STD}"
 				fi
 			else
-				pause "Erro na instalação.. Tecle [Enter] para continuar." ; menu_laucher
+				pause " Erro na instalação.. Tecle [Enter] para continuar." ; menu_laucher
 			fi
 		fi
 	fi
+	pause " Tecle [Enter] para retornar ao menu." ; menu_laucher
 }
 
 # Desativar Laucher ATV Pro TCL Mod + Widget
 desativar_laucher(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.tcl.home)" != "" ]; then
+		echo ""
+		echo -e " ${GRE}*${STD} ${NEG}Ativando Lauche Padrão...${STD}" && sleep 2
+		echo ""
 		adb shell pm enable com.google.android.tvlauncher
-		if [ "$(adb shell pm enable com.google.android.tvlauncher | grep enable | cut -f5 -d " ")" = "enable" ]; then
-			adb shell am start -n com.google.android.tvlauncher/.MainActivity
-			if [ "$?" -qe 0 ]; then
-				echo "Configurado o Laucher padrão do Android TV com sucesso!"
+		if [ "$?" -eq "0" ]; then
+			echo ""
+			echo -e " ${CIN}*${STD} ${NEG}Desativando Laucher ATV PRO MOD...${STD}" && sleep 2
+			echo ""
+			adb shell pm disable-user --user 0 com.tcl.home
+			if [ "$?" -eq "0" ]; then
+				echo ""
+				echo -e " ${CIN}*${STD} ${NEG}Laucher ATV PRO MOD desativado com sucesso!${STD}" && sleep 1
+				echo ""
 			else
-				pause "Erro abrir o Laucher padrão, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+				pause " Erro ao desativar o Laucher ATV PRO MOD, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+			fi
+			adb shell am start -n com.google.android.tvlauncher/.MainActivity
+			if [ "$?" -eq "0" ]; then
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Configurado o Laucher padrão da Android TV com sucesso!${STD}"
+				echo ""
+			else
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro abrir o Laucher padrão, verifique sua conexão.${STD}"
+				echo ""
+				pause " Tecle [Enter] para retornar ao menu" ; menu_laucher
 			fi
 		else
-			echo "Seu Laucher ATV PRO MOD já está desativado."
-			pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao desativar Laucher ATV PRO MOD.${STD}"
+			echo ""
+			pause " Tecle [Enter] para retornar ao menu" ; menu_laucher
 		fi
 	else
-		echo "Laucher ATV PRO MOD ainda não instalado."
+		echo ""
+		echo -e " ${ROS}*${STD} ${NEG}Laucher ATV PRO MOD ainda não instalado.${STD}"
+		echo ""
 	fi
-	menu_laucher
+	pause " Tecle [Enter] para retornar ao menu" ; menu_laucher
 }
 
 
@@ -415,7 +468,7 @@ desativar_laucher(){
 install_aptoidetv(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep cm.aptoidetv.pt)" != "" ]; then
 		echo "Aptoide TV já está instalado."
-		pause "Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
+		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Apdoide TV
 		echo "Baixando Aptoide TV..." && sleep 1
@@ -425,7 +478,7 @@ install_aptoidetv(){
 		else
 			echo "Instalando o Aptoide TV, aguarde..."
 			adb install -r aptoide.apk
-			if [ "$?" -eq 0 ]; then
+			if [ "$?" -eq "0" ]; then
 				echo "Aptoide TV instalado com sucesso!"
 			else
 				echo "Erro na instalação."
@@ -438,7 +491,7 @@ install_aptoidetv(){
 install_deezermod(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep deezer.android.tv)" != "" ]; then
 		echo "Deezer MOD já está instalado."
-		pause "Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
+		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Apdoide TV
 		echo "Baixando Deezer MOD..." && sleep 1
@@ -448,7 +501,7 @@ install_deezermod(){
 		else
 			echo "Instalando o Deezer MOD, aguarde..."
 			adb install -r deezer.apk
-			if [ "$?" -eq 0 ]; then
+			if [ "$?" -eq "0" ]; then
 				echo "Deezer MOD instalado com sucesso!"
 			else
 				echo "Erro na instalação."
@@ -461,7 +514,7 @@ install_deezermod(){
 install_spotify(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.spotify.tv.android)" != "" ]; then
 		echo "Spotify já está instalado."
-		pause "Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
+		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Spotify
 		echo "Baixando Spotify..." && sleep 1
@@ -471,7 +524,7 @@ install_spotify(){
 		else
 			echo "Instalando o Spotify, aguarde..."
 			adb install -r spotify.apk
-			if [ "$?" -eq 0 ]; then
+			if [ "$?" -eq "0" ]; then
 				echo "Spotify instalado com sucesso!"
 			else
 				echo "Erro na instalação."
@@ -484,7 +537,7 @@ install_spotify(){
 install_tvbro(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.phlox.tvwebbrowser)" != "" ]; then
 		echo "TV Bro já está instalado."
-		pause "Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
+		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o TV Bro
 		echo "Baixando TV Bro..." && sleep 1
@@ -494,7 +547,7 @@ install_tvbro(){
 		else
 			echo "Instalando o TV Bro, aguarde..."
 			adb install -r tvbro.apk
-			if [ "$?" -eq 0 ]; then
+			if [ "$?" -eq "0" ]; then
 				echo "TV Bro instalado com sucesso!"
 			else
 				echo "Erro na instalação."
@@ -507,7 +560,7 @@ install_tvbro(){
 install_smartyoutube(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.liskovsoft.videomanager)" != "" ]; then
 		echo "Smart Youtube já está instalado."
-		pause "Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
+		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Smart Youtube
 		echo "Baixando Smart Youtube..." && sleep 1
@@ -517,7 +570,7 @@ install_smartyoutube(){
 		else
 			echo "Instalando o Smart Youtube, aguarde..."
 			adb install -r smartyoutube.apk
-			if [ "$?" -eq 0 ]; then
+			if [ "$?" -eq "0" ]; then
 				echo "Smart Youtube instalado com sucesso!"
 			else
 				echo "Erro na instalação."
@@ -530,7 +583,7 @@ install_smartyoutube(){
 install_sendfiles(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.yablio.sendfilestotv)" != "" ]; then
 		echo "Send Files já está instalado."
-		pause "Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
+		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Send Files
 		echo "Baixando Send Files..." && sleep 1
@@ -540,7 +593,7 @@ install_sendfiles(){
 		else
 			echo "Instalando o Send Files, aguarde..."
 			adb install -r sendfiles.apk
-			if [ "$?" -eq 0 ]; then
+			if [ "$?" -eq "0" ]; then
 				echo "Send Files instalado com sucesso!"
 			else
 				echo "Erro na instalação."
@@ -553,7 +606,7 @@ install_sendfiles(){
 install_stremio(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.stremio.one)" != "" ]; then
 		echo "Stremio já está instalado."
-		pause "Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
+		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Stremio
 		echo "Baixando Stremio..." && sleep 1
@@ -563,7 +616,7 @@ install_stremio(){
 		else
 			echo "Instalando o Stremio, aguarde..."
 			adb install -r stremio.apk
-			if [ "$?" -eq 0 ]; then
+			if [ "$?" -eq "0" ]; then
 				echo "Stremio instalado com sucesso!"
 			else
 				echo "Erro na instalação."
@@ -576,7 +629,7 @@ install_stremio(){
 install_xplore(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.lonelycatgames.Xplore)" != "" ]; then
 		echo "X-Plore já está instalado."
-		pause "Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
+		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o X-Plore
 		echo "Baixando X-Plore..." && sleep 1
@@ -586,7 +639,7 @@ install_xplore(){
 		else
 			echo "Instalando o X-Plore, aguarde..."
 			adb install -r xplore.apk
-			if [ "$?" -eq 0 ]; then
+			if [ "$?" -eq "0" ]; then
 				echo "X-Plore instalado com sucesso!"
 			else
 				echo "Erro na instalação."
@@ -725,7 +778,7 @@ menu_install_apps(){
 	done
 }
 
-# Cria um diretório temporário e joga todos arquivos lá dentro e remove ao sair
+# Cria um diretório temporário e joga todos arquivos lá dentro e remove sempre ao entrar no script
 rm -rf .tmp
 mkdir .tmp
 cd .tmp
