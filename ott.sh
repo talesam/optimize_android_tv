@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.21"
+VER="v0.0.22"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -702,12 +702,9 @@ menu_install_apps(){
 }
 
 # Cria um diretório temporário e joga todos arquivos lá dentro e remove ao sair
-if [ -e ".tmp" ]; then
-	rm -rf .tmp
-else
-	mkdir .tmp
-	cd .tmp
-	# Chama o script inicial
-	termux
-fi
+rm -rf .tmp
+mkdir .tmp
+cd .tmp
+# Chama o script inicial
+termux
 rm -rf .tmp
