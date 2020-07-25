@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.20"
+VER="v0.0.21"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -65,29 +65,14 @@ termux(){
 	else
 		echo " Baixando dependências para utilizar o script no Termux"
 		echo " Nas pŕoximas telas, tecle [Y], quando necessário, para continuar..." ; sleep 2
-		#pkg update -y && pkg install -y wget && wget -O - https://raw.githubusercontent.com/rendiix/termux-adb-fastboot/master/install.sh | bash -
 		apt update && apt install wget && wget https://raw.githubusercontent.com/MasterDevX/Termux-ADB/master/InstallTools.sh && bash InstallTools.sh
 		if [ "$?" -eq 0 ]; then
-			echo "I nstalação conluida com sucesso!"
+			echo "Instalação conluida com sucesso!"
 			pause " Tecle [Enter] para se conectar a TV..." ; conectar_tv
 		else
 			echo " Erro ao baixar e instalar as dependências"
 			echo " Verifique sua conexão e tente novamente." ; exit 0
 		fi
-	fi
-}
-
-# Testa conexão com a TV
-erro_conexao(){
-	if [ "$?" -eq 0 ]; then
-		echo -e "  ${BLU}*${STD}"
-		echo -e "  ${BLU}*${STD} Conectado com sucesso a TV"
-		echo -e "  ${BLU}*${STD}" && sleep 1
-	else
-		echo -e "  ${RED}*${STD}"
-		echo -e "  ${RED}*${STD} Erro! Falha na conexão, Verifique seu endereço de IP"
-		echo -e "  ${RED}*${STD}"
-		pause "Tecle [Enter] para tentar novamente..." ; conectar_tv
 	fi
 }
 
@@ -111,10 +96,12 @@ conectar_tv(){
 			echo -e " ${GRE046}Conectado com sucesso a TV!${STD}" && sleep 3 ; menu_principal
 			echo ""
 		else
-			erro_conexao
+			echo -e "  ${RED}*${STD} Erro! Falha na conexão, Verifique seu endereço de IP"
+			pause "Tecle [Enter] para tentar novamente..." ; conectar_tv
 		fi
 	else
-		erro_conexao
+			echo -e "  ${RED}*${STD} Erro! Falha na conexão, Verifique seu endereço de IP"
+			pause "Tecle [Enter] para tentar novamente..." ; conectar_tv
 	fi
 }
 
@@ -714,5 +701,13 @@ menu_install_apps(){
 	done
 }
 
-# Chama o script inicial
-termux
+# Cria um diretório temporário e joga todos arquivos lá dentro e remove ao sair
+if [ -e ".tmp" ]; then
+	rm -rf .tmp
+else
+	mkdir .tmp
+	cd .tmp
+	# Chama o script inicial
+	termux
+fi
+rm -rf .tmp
