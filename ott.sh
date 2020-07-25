@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.23"
+VER="v0.0.25"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -189,18 +189,45 @@ ativar() {
 	IFS=$'\n'
 	
 	apk_disabled="$(adb shell pm list packages -d | cut -f2 -d:)"
-
-	for apk_full in $(cat apps_disable.list); do
-		    apk="$(echo "$apk_full" | cut -f1 -d"|")"
-		    apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
-
-		    if [ "$(echo "$apk_disabled" | grep "$apk")" != "" ]; then
-                echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite S(Sim) para ATIVAR ou N(Não) para manter DESATIVADO"
-                pergunta
-            fi
-
-	done
+	# Verifica se o arquivo existe no diretório local
+	if [ -e "apps_disable.list" ]; then
+		for apk_full in $(cat apps_disable.list); do
+			apk="$(echo "$apk_full" | cut -f1 -d"|")"
+			apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
+			if [ "$(echo "$apk_disabled" | grep "$apk")" != "" ]; then
+				echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite S(Sim) para ATIVAR ou N(Não) para manter DESATIVADO"
+				pergunta_ativar
+			fi
+		done
+	else
+		# Baixar lista de apps para serem desativados
+		echo "Aguarde, baixando lista de apps..." && sleep 1
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/apps_disable.list
+		if [ -e "apps_disable.list" ]; then
+			for apk_full in $(cat apps_disable.list); do
+				apk="$(echo "$apk_full" | cut -f1 -d"|")"
+				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
+				if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
+					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite S(Sim) para ATIVAR ou N(Não) para manter ATIVO"
+					pergunta_ativar
+				fi
+			done
+		else
+			echo "Erro ao baixar a lista de apps. Verifique sua conexão."
+			pause " Tecle [Enter] para retornar ao menu principal..." ; menu_principal
+		fi
+	fi
 	IFS=$OIFS
+}
+
+pergunta_ativar() {
+	read -p " [S/N]: " -e -n1 resposta
+	echo -e "$(linha)\n"
+	[[ $resposta != +(s|S|n|N) ]] && pergunta_ativar || resposta_ativar
+}
+
+resposta_ativar() {
+	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${ROX027}"Saída do Comando ${apk}${STD}";adb shell pm enable ${apk};}
 }
 
 desativar() {
@@ -213,13 +240,12 @@ desativar() {
 	# Verifica se o arquivo existe no diretório local
 	if [ -e "apps_disable.list" ]; then
 		for apk_full in $(cat apps_disable.list); do
-				apk="$(echo "$apk_full" | cut -f1 -d"|")"
-				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
-
-				if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
-					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite S(Sim) para DESATIVAR ou N(Não) para manter ATIVO"
-					pergunta
-				fi
+			apk="$(echo "$apk_full" | cut -f1 -d"|")"
+			apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
+			if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
+				echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite S(Sim) para DESATIVAR ou N(Não) para manter ATIVO"
+				pergunta_desativar
+			fi
 		done
 	else
 		# Baixar lista de apps para serem desativados
@@ -229,26 +255,26 @@ desativar() {
 			for apk_full in $(cat apps_disable.list); do
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
 				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
-
 				if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
 					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite S(Sim) para DESATIVAR ou N(Não) para manter ATIVO"
-					pergunta
+					pergunta_desativar
 				fi
 			done
 		else
 			echo "Erro ao baixar a lista de apps. Verifique sua conexão."
+			pause " Tecle [Enter] para retornar ao menu principal..." ; menu_principal
 		fi
 	fi
 	IFS=$OIFS
 }
 
-pergunta() {
+pergunta_desativar() {
 	read -p " [S/N]: " -e -n1 resposta
 	echo -e "$(linha)\n"
-	[[ $resposta != +(s|S|n|N) ]] && pergunta || resposta
+	[[ $resposta != +(s|S|n|N) ]] && pergunta_desativar || resposta_desativar
 }
 
-resposta() {
+resposta_desativar() {
 	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${ROX027}"Saída do Comando ${apk}${STD}";adb shell pm disable-user --user 0 ${apk};}
 }
 
@@ -266,8 +292,8 @@ install_laucher(){
 		if [ "$?" -eq 0 ]; then
 			echo "Laucher ATV PRO removido com sucesso!"
 		else
-			echo "Erro ao remover Laucher ATV PRO"
-			pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
+			echo "Você não possui o Laucher ATV PRO instalado."
+			pause "Tecle [Enter] para continuar com a instalação..."
 		fi
 	fi
 
@@ -278,44 +304,42 @@ install_laucher(){
 		if [ "$?" -eq 0 ]; then
 			echo "Laucher ATV PRO removido com sucesso!"
 		else
-			echo "Erro ao remover Laucher ATV PRO"
-			pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
+			echo "Você não possui o Laucher ATV FRE instalado."
+			pause "Tecle [Enter] para continuar com a instalação..."
 		fi
 	fi
 
 	if [ "$(adb shell pm list packages -u | cut -f2 -d: | grep com.tcl.home)" != "" ]; then
 		if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.tcl.home)" = "" ]; then
-			echo "Ativando Laucher ATV PRO MOD"
+			echo "Ativando Laucher ATV PRO MOD..." && sleep 1
 			adb shell pm enable com.tcl.home
-			#if [ "$(adb shell pm enable com.tcl.home | cut -f5 -d " ")" = "enabled" ]; then
 			if [ "$?" -eq 0 ]; then
-				echo "Laucher ativado com sucesso!"
-			else
-				pause "Tecle [Enter] para retornar ao menu" ; menu_laucher
-			fi
-			# Desativa o laucher padrão
-			adb shell pm disable-user --user 0 com.google.android.tvlauncher
-			if [ "$(adb shell pm disable-user --user 0 com.google.android.tvlauncher | grep disabled-user | cut -f5 -d " ")" = "disabled-user" ]; then
-				echo "Laucher ATV PRO MOD ativo com sucesso!"
-				echo "Ativando a nova Laucher ATV PRO MOD..." && sleep 2
-				adb shell monkey -p com.tcl.home -c android.intent.category.LAUNCHER 1
-				if [ "$?" -eq 0 ]; then
-					echo "Laucher ATV PRO MOD ativado com sucesso!"
-					echo "Abrindo Laucher ATV PRO MOD..." && sleep 1
+				# Desativa o laucher padrão
+				adb shell pm disable-user --user 0 com.google.android.tvlauncher
+				if [ "$(adb shell pm disable-user --user 0 com.google.android.tvlauncher | grep disabled-user | cut -f5 -d " ")" = "disabled-user" ]; then
+					echo "Laucher ATV PRO MOD ativo com sucesso!"
+					echo ""
+					echo "Iniciando a nova Laucher ATV PRO MOD..." && sleep 2
+					adb shell monkey -p com.tcl.home -c android.intent.category.LAUNCHER 1
+					if [ "$?" -eq 0 ]; then
+						echo "Laucher ATV PRO MOD iniciada com sucesso!" && sleep 1
+						echo "Atualizando as permissões..."
+						# Seta permissão para o widget
+						adb shell appwidget grantbind --package com.tcl.home --user 0
+						if [ "$?" -eq 0 ]; then
+							echo "Permissões atualizadas com sucesso!"
+						else
+							pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+						fi
+					else
+						pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+					fi
 				else
 					pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
 				fi
 			else
-				pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
-			fi
-			echo "Atualizando as permissões..."
-			# Seta permissão para o widget
-			adb shell appwidget grantbind --package com.tcl.home --user 0
-			if [ "$?" -ne 0 ]; then
-				pause "Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
-			else
-				echo "Permissões atualizadas com sucesso!"
-			fi
+				pause "Erro ao ativar Laucher ATV MOD. Tecle [Enter] para retornar ao menu" ; menu_laucher
+			fi	
 		fi
 	else
 		echo "Aguarde a instalação do novo Laucher ATV PRO MOD..." && sleep 2
