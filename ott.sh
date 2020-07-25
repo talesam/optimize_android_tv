@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.22"
+VER="v0.0.23"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -117,7 +117,7 @@ rm_apps_p8m(){
 			if [ "$?" -eq 0 ]; then
 				echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 			else
-				echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe"
+				echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
 			fi
 		done
 	else
@@ -130,7 +130,7 @@ rm_apps_p8m(){
 				if [ "$?" -eq 0 ]; then
 					echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 				else
-					echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe"
+					echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
 				fi
 			done
 		else
@@ -154,7 +154,7 @@ rm_apps_S6500(){
 			if [ "$?" -eq 0 ]; then
 				echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 			else
-				echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe"
+				echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
 			fi
 		done
 	else
@@ -167,7 +167,7 @@ rm_apps_S6500(){
 				if [ "$?" -eq 0 ]; then
 					echo -e "  ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 				else
-					echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe"
+					echo -e "  ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
 				fi
 			done
 		else
@@ -707,4 +707,3 @@ mkdir .tmp
 cd .tmp
 # Chama o script inicial
 termux
-rm -rf .tmp
