@@ -6,13 +6,14 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.31"
+VER="v0.1.33"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
 
 # Cores degrade
 RED001='\e[38;5;1m'		# Vermelho 1
+RED009='\e[38;5;9m'		# Vermelho 9
 CYA122='\e[38;5;122m'	# Ciano 122
 CYA044='\e[38;5;44m'	# Ciano 44
 ROX063='\e[38;5;63m'	# Roxo 63
@@ -22,6 +23,7 @@ GRY247='\e[38;5;247m'	# Cinza 247
 LAR208='\e[38;5;208m'	# Laranja 208
 LAR214='\e[38;5;214m'	# Laranja 214
 AMA226='\e[38;5;226m'	# Amarelo 226
+BLU039='\e[38;5;44m'	# Azul 39
 MAR094='\e[38;5;94m'	# Marrom 94
 MAR136='\e[38;5;136m'	# Marrom 136
 
@@ -61,6 +63,7 @@ termux(){
 	echo -e " ${ROX063}Verificando dependências, aguarde...${STD}" && sleep 2
 	if [ -e "/data/data/com.termux/files/usr/bin/adb.bin" ] || [ -e "/usr/bin/adb" ]; then
 		echo -e " ${GRE046}Dependencias encontradas, conecte-se na TV.${STD}"
+		echo ""
 		pause " Tecle [Enter] para continuar..." ; conectar_tv
 	else
 		echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script no Termux...${SDT}" && sleep 2
@@ -68,6 +71,7 @@ termux(){
 		if [ "$?" -eq "0" ]; then
 			echo ""
 			echo -e " ${GRE}*${STD} ${NEG}Instalação conluida com sucesso!${STD}"
+			echo ""
 			pause " Tecle [Enter] para se conectar a TV..." ; conectar_tv
 		else
 			echo ""
@@ -84,6 +88,7 @@ conectar_tv(){
 	echo ""
 	echo -e " ${AMA226}Configurações${STD}, ${AMA226}Preferências do dispositivo${STD},"
 	echo -e " ${AMA226}Sobre${STD}, ${AMA226}Status${STD}."
+	echo ""
 	read IP
 
 	ping -c 1 $IP >/dev/null
@@ -93,8 +98,30 @@ conectar_tv(){
 		echo -e " ${LAR214}Conectando-se a sua TV...${STD}" && sleep 3
 		adb connect $IP >/dev/null
 		if [ "$?" -eq "0" ]; then
-			echo -e " ${GRE046}Conectado com sucesso a TV!${STD}" && sleep 3 ; menu_principal
+			echo -e " ${GRE046}Conectado com sucesso a TV!${STD}" && sleep 3
 			echo ""
+			clear
+			until adb shell pm list packages -e 2>/dev/null; do
+			clear
+				echo -e " ${CYA122}Apareceu a seguinte janela em sua TV:${STD}"
+				echo -e " ${NEG}Permitir a depuração USB?${STD}"
+				echo ""
+				echo -e " ${CYA122}Marque a seguinte caixa:${STD}"
+				echo -e " ${ROS}Sempre permitir a partir deste computador${STD}"
+				echo -e " ${CYA122}Depois de marcar a caixa e der${STD} ${NEG}OK${STD}"
+				echo ""
+				pause " Tecle [Enter] para continuar..." ;
+				# Testa se o humano marcou a opção na TV
+				if [ "$(adb shell pm list packages -e 2>/dev/null)" = "0" ]; then
+					menu_principal
+				else
+					echo ""
+					echo -e " ${CYA}Não me engana, você ainda\n não marcou a opção na TV :-(\n Vou te dar outra chance!${STD}"
+					echo ""
+					pause " Ative a opção e tecle [Enter]"
+				fi
+			done
+				menu_principal
 		else
 			echo -e " ${RED}*${STD} ${NEG}Erro! Falha na conexão, Verifique seu endereço de IP${STD}"
 			pause " Tecle [Enter] para tentar novamente..." ; conectar_tv
@@ -470,185 +497,242 @@ desativar_laucher(){
 # Instalar Aptoide TV
 install_aptoidetv(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep cm.aptoidetv.pt)" != "" ]; then
-		echo "Aptoide TV já está instalado."
+		echo ""
+		echo -e " ${GRE}*${STD} ${NEG}Aptoide TV já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Apdoide TV
-		echo "Baixando Aptoide TV..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Baixando Aptoide TV...${STD}" && sleep 1
 		wget --content-disposition https://cloud.talesam.org/s/j5ZbDP5yL2DAT9J/download && clear
 		if [ "$?" -ne 0 ]; then
-			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
+			pause " Tecle [Enter] para continuar." ; menu_laucher
 		else
-			echo "Instalando o Aptoide TV, aguarde..."
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Aptoide TV, aguarde...${STD}" && sleep 1
 			adb install -r aptoide.apk
 			if [ "$?" -eq "0" ]; then
-				echo "Aptoide TV instalado com sucesso!"
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Aptoide TV instalado com sucesso!${STD}"
 			else
-				echo "Erro na instalação."
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
 			fi
 		fi
 	fi
+	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
 # Instalar Deezer MOD
 install_deezermod(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep deezer.android.tv)" != "" ]; then
-		echo "Deezer MOD já está instalado."
+		echo ""
+		echo -e " ${GRE}*${STD} ${NEG}Deezer MOD já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Apdoide TV
-		echo "Baixando Deezer MOD..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Baixando Deezer MOD...${STD}" && sleep 1
 		wget --content-disposition https://cloud.talesam.org/s/8eBw4HGZryFyssf/download && clear
 		if [ "$?" -ne 0 ]; then
-			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
-			echo "Instalando o Deezer MOD, aguarde..."
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Deezer MOD, aguarde...${STD}"
 			adb install -r deezer.apk
 			if [ "$?" -eq "0" ]; then
-				echo "Deezer MOD instalado com sucesso!"
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Deezer MOD instalado com sucesso!${STD}"
 			else
-				echo "Erro na instalação."
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
 			fi
 		fi
 	fi
+	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
 # Instalar Spotify
 install_spotify(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.spotify.tv.android)" != "" ]; then
-		echo "Spotify já está instalado."
+		echo ""
+		echo -e " ${GRE}*${STD} ${NEG}Spotify já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Spotify
-		echo "Baixando Spotify..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Baixando Spotify...${STD}" && sleep 1
 		wget --content-disposition https://cloud.talesam.org/s/t8w48i6px9b4FfZ/download && clear
 		if [ "$?" -ne 0 ]; then
-			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
-			echo "Instalando o Spotify, aguarde..."
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Spotify, aguarde...${STD}"
 			adb install -r spotify.apk
 			if [ "$?" -eq "0" ]; then
-				echo "Spotify instalado com sucesso!"
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Spotify instalado com sucesso!${STD}"
 			else
-				echo "Erro na instalação."
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
 			fi
 		fi
 	fi
+	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
 # Instalar TV Bro
 install_tvbro(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.phlox.tvwebbrowser)" != "" ]; then
-		echo "TV Bro já está instalado."
+		echo ""
+		echo -e " ${GRE}*${STD} ${NEG}TV Bro já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o TV Bro
-		echo "Baixando TV Bro..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Baixando TV Bro...${STD}" && sleep 1
 		wget --content-disposition https://cloud.talesam.org/s/SSC5C4QrPN7BzqZ/download && clear
 		if [ "$?" -ne 0 ]; then
-			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
-			echo "Instalando o TV Bro, aguarde..."
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o TV Bro, aguarde...${STD}"
 			adb install -r tvbro.apk
 			if [ "$?" -eq "0" ]; then
-				echo "TV Bro instalado com sucesso!"
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}TV Bro instalado com sucesso!${STD}"
 			else
-				echo "Erro na instalação."
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
 			fi
 		fi
 	fi
+	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
 # Instalar Smart Youtube
 install_smartyoutube(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.liskovsoft.videomanager)" != "" ]; then
-		echo "Smart Youtube já está instalado."
+		echo ""
+		echo -e " ${GRE}*${STD} ${NEG}Smart Youtube já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Smart Youtube
-		echo "Baixando Smart Youtube..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Baixando Smart Youtube...${STD}" && sleep 1
 		wget --content-disposition https://cloud.talesam.org/s/2S86QiiEm3ET8ss/download && clear
 		if [ "$?" -ne 0 ]; then
-			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
-			echo "Instalando o Smart Youtube, aguarde..."
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Smart Youtube, aguarde...${STD}"
 			adb install -r smartyoutube.apk
 			if [ "$?" -eq "0" ]; then
-				echo "Smart Youtube instalado com sucesso!"
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Smart Youtube instalado com sucesso!${STD}"
 			else
-				echo "Erro na instalação."
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
 			fi
 		fi
 	fi
+	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
 # Instalar Send Files
 install_sendfiles(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.yablio.sendfilestotv)" != "" ]; then
-		echo "Send Files já está instalado."
+		echo ""
+		echo -e " ${GRE}*${STD} ${NEG}Send Files já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Send Files
-		echo "Baixando Send Files..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Baixando Send Files...${STD}" && sleep 1
 		wget --content-disposition https://cloud.talesam.org/s/NwHy9Fe3AxYNLrL/download && clear
 		if [ "$?" -ne 0 ]; then
-			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
-			echo "Instalando o Send Files, aguarde..."
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Send Files, aguarde...${STD}"
 			adb install -r sendfiles.apk
 			if [ "$?" -eq "0" ]; then
-				echo "Send Files instalado com sucesso!"
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Send Files instalado com sucesso!${STD}"
 			else
-				echo "Erro na instalação."
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
 			fi
 		fi
 	fi
+	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
 # Instalar Stremio
 install_stremio(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.stremio.one)" != "" ]; then
-		echo "Stremio já está instalado."
+		echo ""
+		echo -e " ${GRE}*${STD} ${NEG}Stremio já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Stremio
-		echo "Baixando Stremio..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Baixando Stremio...${STD}" && sleep 1
 		wget --content-disposition https://cloud.talesam.org/s/Ej3B9n4GajL5xPw/download && clear
 		if [ "$?" -ne 0 ]; then
-			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
-			echo "Instalando o Stremio, aguarde..."
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Stremio, aguarde...${STD}"
 			adb install -r stremio.apk
 			if [ "$?" -eq "0" ]; then
-				echo "Stremio instalado com sucesso!"
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Stremio instalado com sucesso!${STD}"
 			else
-				echo "Erro na instalação."
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
 			fi
 		fi
 	fi
+	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
 # Instalar X-Plore
 install_xplore(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.lonelycatgames.Xplore)" != "" ]; then
-		echo "X-Plore já está instalado."
+		echo ""
+		echo -e " ${GRE}*${STD} ${NEG}X-Plore já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o X-Plore
-		echo "Baixando X-Plore..." && sleep 1
+		echo ""
+		echo -e " ${BLU}*${STD} ${NEG}Baixando X-Plore...${STD}" && sleep 1
 		wget --content-disposition https://cloud.talesam.org/s/LQXxP96zFj2QscL/download && clear
 		if [ "$?" -ne 0 ]; then
-			echo "Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde."
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
-			echo "Instalando o X-Plore, aguarde..."
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o X-Plore, aguarde...${STD}"
 			adb install -r xplore.apk
 			if [ "$?" -eq "0" ]; then
-				echo "X-Plore instalado com sucesso!"
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}X-Plore instalado com sucesso!${STD}"
 			else
-				echo "Erro na instalação."
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
 			fi
 		fi
 	fi
+	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
 # --- INSTALAR NOVOS APPS - FIM
@@ -674,16 +758,16 @@ menu_principal(){
 			fi
 		fi
 		echo ""
-		echo -e " ${MAR136}Este script possui a finalidade de otimizar${STD}"
-		echo -e " ${MAR136}o sistema Android TV, removendo e desativando${STD}"
-		echo -e " ${MAR136}alguns apps e instalando outros.${STD}"
+		echo -e " ${LAR214}Este script possui a finalidade de otimizar${STD}"
+		echo -e " ${LAR214}o sistema Android TV, removendo e desativando${STD}"
+		echo -e " ${LAR214}alguns apps e instalando outros.${STD}"
 		echo ""
 		echo -e " ${CUI}FAÇA POR SUA CONTA E RISCO${STD}"
 		echo ""
-		echo -e " ${BLU}1.$STD ${RED001}Remover apps lixo (P8M)${STD}"
-		echo -e " ${BLU}2.$STD ${RED001}Remover apps lixo (S6500)${STD}"
+		echo -e " ${BLU}1.$STD ${RED009}Remover apps lixo (P8M)${STD}"
+		echo -e " ${BLU}2.$STD ${RED009}Remover apps lixo (S6500)${STD}"
 		echo -e " ${BLU}3.$STD ${GRY247}Desativar${STD}/${GRE046}Ativar apps${STD}"
-		echo -e " ${BLU}4.$STD ${ROX027}Launcher ATV Pro TCL Mod + Widget${STD}"
+		echo -e " ${BLU}4.$STD ${BLU039}Launcher ATV Pro TCL Mod + Widget${STD}"
 		echo -e " ${BLU}5.$STD ${GRE046}Instalar novos apps${STD}"
 		echo -e " ${BLU}6.$STD ${RED}Sair${STD}"
 		echo ""
@@ -695,7 +779,7 @@ menu_principal(){
 			4 ) menu_laucher ;;
 			5 ) menu_install_apps ;;
 			6 ) exit ; adb disconnect $IP >/dev/null ;;
-			* ) clear; echo "Por favor escolha 1, 2, 3, 4, 5 ou 6"; 
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD} ${NEG}ou${STD} ${ROS}6${STD}"; 
 		esac
 	done
 }
@@ -718,7 +802,7 @@ menu_ativar_desativar(){
 			1 ) desativar ;;
 			2 ) ativar ;;
 			3 ) menu_principal ;;
-			* ) clear; echo "Por favor, escolha 1, 2 ou 3";
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}3${STD}${NEG}";
 		esac
 	done
 }
@@ -741,7 +825,7 @@ menu_laucher(){
 			1 ) install_laucher ;;
 			2 ) desativar_laucher ;;
 			3 ) menu_principal ;;
-			* ) clear; echo "Por favor, escolha 1, 2 ou 3";
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}3${STD}${NEG}";
 		esac
 	done
 }
@@ -776,7 +860,7 @@ menu_install_apps(){
 			7 ) install_stremio ;;
 			8 ) install_xplore ;;
 			9 ) menu_principal ;;
-			* ) clear; echo "Por favor, escolha 1, 2, 3, 4, 5, 6, 7, 8 ou 9";
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD}${NEG},${STD} ${ROS}6${STD}${NEG},${STD} ${ROS}7${STD}${NEG},${STD} ${ROS}8${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}9${STD}";
 		esac
 	done
 }
