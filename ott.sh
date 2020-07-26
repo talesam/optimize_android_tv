@@ -655,7 +655,7 @@ install_sendfiles(){
 		# Baixa o Send Files
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando Send Files...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/NwHy9Fe3AxYNLrL/download && clear
+		wget --content-disposition https://cloud.talesam.org/s/oKtHpTr9xDtpz5z/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
