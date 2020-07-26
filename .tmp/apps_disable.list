@@ -13,8 +13,8 @@ com.android.providers.contacts|Embarcado pelo sistema Android nativo, exerce fun
 com.google.android.feedback|Telemetria do Google. *RECOMENDADO DESATIVAR*.
 com.google.android.tv.bugreportsender|Telemetria do Google. *RECOMENDADO DESATIVAR*.
 com.google.android.youtube.tv|Youtube nativo, exibe ads e não é customizável. Recomendado substituí-lo pelo SmartYoutube. *SEGURO DESATIVAR*.
-com.google.android.tvrecommendations|Atalho rápido de notificação quando um pendrive é plugado. Útil para o laucher padrão. Relativamente inútil, *SEGURO DESATIVAR*.
-com.google.android.leanbacklauncher.recommendations|Faz parte do launcher padrão, responsável por exibir recomendações dos parceiros da TCL/Google. Inútil, *RECOMENDADO DESATIVAR*.
+com.google.android.tvrecommendations|Faz parte do launcher padrão, responsável por exibir recomendações dos parceiros da TCL/Google. Inútil, *RECOMENDADO DESATIVAR*.
+com.google.android.leanbacklauncher.recommendations|Atalho rápido de notificação quando um pendrive é plugado. Útil para o laucher padrão. Relativamente inútil, *SEGURO DESATIVAR*.
 com.google.android.tv.remote.service|Atualiza o firmware do controle, executa serviços no background. Até hoje nenhuma atualização foi disponibilizada. Relativamente inútil, *SEGURO DESATIVAR*.
 com.google.android.music|Embarcado pelo Google com função similar ao Spotify, Deezer. Inútil, *SEGURO DESATIVAR*.
 com.google.android.videos|Embarcado pelo Google com função similar ao Netflix, Amazon Videos, focado em aluguel de filmes. Inútil, *SEGURO DESATIVAR*.
