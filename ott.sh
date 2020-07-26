@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.0.30"
+VER="v0.0.31"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -80,7 +80,7 @@ termux(){
 conectar_tv(){
 	clear
 	echo " Digite o endereço IP da sua TV que encontra no"
-	echo " caminho abaixo e tecle [Enter] para continuar:"
+	echo -e " caminho abaixo e tecle ${NEG}[Enter]${STD} para continuar:"
 	echo ""
 	echo -e " ${AMA226}Configurações${STD}, ${AMA226}Preferências do dispositivo${STD},"
 	echo -e " ${AMA226}Sobre${STD}, ${AMA226}Status${STD}."
@@ -93,7 +93,6 @@ conectar_tv(){
 		echo -e " ${LAR214}Conectando-se a sua TV...${STD}" && sleep 3
 		adb connect $IP >/dev/null
 		if [ "$?" -eq "0" ]; then
-			echo ""
 			echo -e " ${GRE046}Conectado com sucesso a TV!${STD}" && sleep 3 ; menu_principal
 			echo ""
 		else
@@ -360,7 +359,11 @@ install_laucher(){
 				fi
 			else
 				pause " Erro ao ativar Laucher ATV MOD. Tecle [Enter] para retornar ao menu" ; menu_laucher
-			fi	
+			fi
+		else
+			echo ""
+			echo -e " ${BLU}*${STD} ${NEG}Laucher ATV PRO MOD já está ativo.${STD}"
+			pause " Tecle [Enter] para retornar ao menu" ; menu_laucher
 		fi
 	else
 		echo ""
