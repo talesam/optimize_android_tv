@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.1.33"
+VER="v0.2.33"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -226,7 +226,7 @@ ativar() {
 			apk="$(echo "$apk_full" | cut -f1 -d"|")"
 			apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 			if [ "$(echo "$apk_disabled" | grep "$apk")" != "" ]; then
-					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRE046}S${STD}(Sim) para ${GRE046}ATIVAR${STD} ou ${GRY247}N${STD}(Não) para manter ${GRY247}DESATIVADO${STD}"
+					echo -e "\n$(linha)\n"${NEG}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRE046}S${STD}(Sim) para ${GRE046}ATIVAR${STD} ou ${GRY247}N${STD}(Não) para manter ${GRY247}DESATIVADO${STD}"
 				pergunta_ativar
 			fi
 		done
@@ -240,7 +240,7 @@ ativar() {
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
 				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 				if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
-					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRE046}S${STD}(Sim) para ${GRE046}ATIVAR${STD} ou ${GRY247}N${STD}(Não) para manter ${GRY247}DESATIVADO${STD}"
+					echo -e "\n$(linha)\n"${NEG}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRE046}S${STD}(Sim) para ${GRE046}ATIVAR${STD} ou ${GRY247}N${STD}(Não) para manter ${GRY247}DESATIVADO${STD}"
 					pergunta_ativar
 				fi
 			done
@@ -277,7 +277,7 @@ desativar() {
 			apk="$(echo "$apk_full" | cut -f1 -d"|")"
 			apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 			if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
-				echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRY247}S${STD}(Sim) para ${GRY247}DESATIVAR${STD} ou ${GRE046}N${STD}(Não) para manter ${GRE046}ATIVO${STD}"
+				echo -e "\n$(linha)\n"${NEG}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRY247}S${STD}(Sim) para ${GRY247}DESATIVAR${STD} ou ${GRE046}N${STD}(Não) para manter ${GRE046}ATIVO${STD}"
 				pergunta_desativar
 			fi
 		done
@@ -291,7 +291,7 @@ desativar() {
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
 				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 				if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
-					echo -e "\n$(linha)\n"${ROX027}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRY247}S${STD}(Sim) para ${GRY247}DESATIVAR${STD} ou ${GRE046}N${STD}(Não) para manter ${GRE046}ATIVO${STD}"
+					echo -e "\n$(linha)\n"${NEG}" $apk_desc"${STD}"\n\"$apk\"\n Digite ${GRY247}S${STD}(Sim) para ${GRY247}DESATIVAR${STD} ou ${GRE046}N${STD}(Não) para manter ${GRE046}ATIVO${STD}"
 					pergunta_desativar
 				fi
 			done
@@ -625,14 +625,14 @@ install_smartyoutube(){
 		# Baixa o Smart Youtube
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando Smart Youtube...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/2S86QiiEm3ET8ss/download && clear
+		wget --content-disposition https://github.com/yuliskov/SmartYouTubeTV/releases/download/stable/smartyoutubetv_latest.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o Smart Youtube, aguarde...${STD}"
-			adb install -r smartyoutube.apk
+			adb install -r smartyoutubetv_latest.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Smart Youtube instalado com sucesso!${STD}"
@@ -737,12 +737,52 @@ install_xplore(){
 
 # --- INSTALAR NOVOS APPS - FIM
 
+# Gravação de tela
+gravar_tela(){
+	clear
+	echo -e "${NEG}Gravação de tela da TV - *EXPERIMENTAL*${STD}"
+	separacao
+	echo ""
+	echo -e " ${LAR214}Bem vindo a gravação de Tela da TV, esse${STD}"
+	echo -e " ${LAR214}recurso é limitado a 3 minutos de gravação,${STD}"
+	echo -e " ${LAR214}porém após terminar uma gravação, outra é${STD}"
+	echo -e " ${LAR214}inicia automaticamnte em outro arquivo de${STD}"
+	echo -e " ${LAR214}mesmo nome, muda apenas o final, por exemplo:${STD}"
+	echo -e " ${LAR214}gravacao-001.mp4, gravacao-002.mp4.${STD}"
+	echo ""
+	echo -e " Para parar a gravação tecle ${NEG}[CTRL + C]${STD}"
+	echo ""
+	# Testa se o diretório já existe, senão cria
+	CAMINHO="/sdcard/ADB\ Recording"
+	adb shell mkdir -p $CAMINHO
+	echo -e " ${NEG}O arquivo será gravado em:${STD}"
+	echo -e " ${ROS}$CAMINHO${STD}"
+	echo ""
+	echo -e " ${ROX063}Digite um nome para o seu arquivo${STD}"
+	echo " e tecle [Enter] para começar a gravar:"
+	echo ""
+	read REC
+	for i in {000..999}; do
+		echo -e " ${BLU}*${STD} ${NEG}Gravando vídeo $REC-${i}.mp4 ...${STD}"
+		adb shell screenrecord --bit-rate 50000000 --size 1280x720 "$CAMINHO/$REC-${i}.mp4"
+		if [ "$?" -eq "0" ]; then
+			echo ""
+			echo -e " ${GRE}*${STD} ${NEG}Vídeo $REC-${i}.mp4 gravado com sucesso!${STD}"
+		else
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao gravar vídeo. Verifique sua conexão.${STD}"
+			echo ""
+			pause "Tecle enter [Enter] para retornar ao menu Principal." ; menu_principal
+		fi
+	done
+}
+
 # --- MENU ---
 # Menu principal
 menu_principal(){
 	clear
 	option=0
-	until [ "$option" = "5" ]; do
+	until [ "$option" = "7" ]; do
 		echo ""
 		echo -e " ${CYA}OTMIZAÇÃO TV TCL P8M, S6500 e S5300${STD} - ${YEL}$VER${STD}"
 
@@ -769,7 +809,8 @@ menu_principal(){
 		echo -e " ${BLU}3.$STD ${GRY247}Desativar${STD}/${GRE046}Ativar apps${STD}"
 		echo -e " ${BLU}4.$STD ${BLU039}Launcher ATV Pro TCL Mod + Widget${STD}"
 		echo -e " ${BLU}5.$STD ${GRE046}Instalar novos apps${STD}"
-		echo -e " ${BLU}6.$STD ${RED}Sair${STD}"
+		echo -e " ${BLU}6.$STD ${AMA226}Gravar Tela da TV${STD} ${NEG}*EXPERIMENTAL*${STD}"
+		echo -e " ${BLU}7.$STD ${RED}Sair${STD}"
 		echo ""
 		read -p " Digite um número e tecle [Enter]:" option
 		case "$option" in
@@ -778,8 +819,9 @@ menu_principal(){
 			3 ) menu_ativar_desativar ;;
 			4 ) menu_laucher ;;
 			5 ) menu_install_apps ;;
-			6 ) exit ; adb disconnect $IP >/dev/null ;;
-			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD} ${NEG}ou${STD} ${ROS}6${STD}"; 
+			6 ) gravar_tela ;;
+			7 ) exit ; adb disconnect $IP >/dev/null ;;
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD},${STD} ${ROS}6${STD} ${NEG}ou${STD} ${ROS}7${STD}"; 
 		esac
 	done
 }
