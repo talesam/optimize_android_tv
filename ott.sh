@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.2.33"
+VER="v0.2.35"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -715,7 +715,7 @@ install_xplore(){
 		# Baixa o X-Plore
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando X-Plore...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/LQXxP96zFj2QscL/download && clear
+		wget --content-disposition https://cloud.talesam.org/s/G5p3wyo3nD7HNgy/download && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -764,7 +764,7 @@ gravar_tela(){
 	read REC
 	for i in {000..999}; do
 		echo -e " ${BLU}*${STD} ${NEG}Gravando vídeo $REC-${i}.mp4 ...${STD}"
-		adb shell screenrecord --bit-rate 50000000 --size 1280x720 "$CAMINHO/$REC-${i}.mp4"
+		adb shell screenrecord --bit-rate 100000000 --size 1280x720 "$CAMINHO/$REC-${i}.mp4"
 		if [ "$?" -eq "0" ]; then
 			echo ""
 			echo -e " ${GRE}*${STD} ${NEG}Vídeo $REC-${i}.mp4 gravado com sucesso!${STD}"
