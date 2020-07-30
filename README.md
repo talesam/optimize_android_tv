@@ -12,3 +12,9 @@ _Script 100% compatível com o Termux_
 **Executar e rodar o script**
 
 `curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott.sh -o ott.sh; bash ott.sh`
+
+Após o comando acima, para chamar o script novamente basta digitar:
+
+`bash ott.sh`
+
+![alt Script rodando no Termux](https://cloud.talesam.org/s/Fab4sqqbsF4ZoFW/preview)
