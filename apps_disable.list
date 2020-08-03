@@ -19,3 +19,21 @@ com.google.android.tv.remote.service|Atualiza o firmware do controle, executa se
 com.google.android.music|Embarcado pelo Google com função similar ao Spotify, Deezer. Inútil, *SEGURO DESATIVAR*.
 com.google.android.videos|Embarcado pelo Google com função similar ao Netflix, Amazon Videos, focado em aluguel de filmes. Inútil, *SEGURO DESATIVAR*.
 com.google.android.play.games|Embarcado pelo Google, alguns jogos nativos fazem uso de APIs para salvar dados, conquistas, scores na núvem. Relativamente inútil, *SEGURO DESATIVAR*.
+android.autoinstalls.config.tcl.device|Função que empurra configuração automáticas "recomendadas". *SEGURO DESATIVAR*.
+com.android.statementservice|Lixo do sistema para concordar com espionagens. *RECOMENDADO DESATIVAR*.
+com.android.printspooler|serviço para impressão na rede, inútil em uma TV. *SEGURO DESATIVAR*.
+com.android.settings.intelligence|Bind na configuração do Android que exibe configurações recomendadas. *SEGURO DESATIVAR*.
+com.google.android.katniss|Comando de voz do google. Caso não utilize o controle de voz do controle. *SEGURO DESATIVAR*.
+com.google.android.backuptransport|API do google, parte do core services, fornece transporte de dados em background. *SEGURO DESATIVAR*.
+com.google.android.syncadapters.contacts|API para contatos, inútil em uma TV. *SEGURO DESATIVAR*.
+com.google.android.partnersetup|API de Telemetria do google para parceiros deles. *RECOMENDADO DESATIVAR*.
+com.google.android.syncadapters.calendar|API de calendário, relativamente inútil. *SEGURO DESATIVAR*.
+com.google.android.tv.assistant|Mais do google dizendo o que você deve gostar, segundo eles mesmos. *RECOMENDADO DESATIVAR*.
+com.tcl.tcl_bt_rcu_service|Serviço da TCL para gerenciamento do controle remoto. *SEGURO DESATIVAR*.
+com.tcl.rc.ota|Atualização do firmware do controle remoto, sem uso. *SEGURO DESATIVAR*.
+com.tcl.factory.view|Menu secreto do desenvolvedor, roda telemetria. *RECOMENDADO DESATIVAR*.
+com.tcl.esticker| Exibe conteúdo da TCL. *SEGURO DESATIVAR*.
+com.tcl.showmode|Modo loja. *SEGURO DESATIVAR*.
+com.tcl.assistant|Serve de auxilio para o Google Assistente, porém não é ativo. *SEGURO DESATIVAR*.
+com.tcl.copydatatotv|API para apk da TCL. *SEGURO DESATIVAR*.
+com.tcl.bi|Bi é uns par de recursos tipo esticker que acaba rodando no background sem uso. *SEGURO DESATIVAR*.
