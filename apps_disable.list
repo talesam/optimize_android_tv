@@ -7,7 +7,7 @@ com.tcl.notereminder|Mensageiro do sistema, responsável por encher o saco quand
 com.tcl.partnercustomizer|Embarcado pela TCL, inútil, é uma obrigação contratual da TCL com seus parceiros, força e privilegia conteúdo de parceiros. *RECOMENDADO DESATIVAR*.
 com.tcl.usercenter|Embarcado pela TCL, inútil. Parece que sobrou espaço na memória e resolveram encher linguiça. Mais do mesmo sobre conteúdo de parceiros. *RECOMENDADO DESATIVAR*.
 com.tcl.partnercustomizer.resource|Embarcado pela TCL. Motor de background que restaura o conteúdo de parceiros caso você os tenha removido. *RECOMENDADO DESATIVAR*.
-com.tcl.smartalexa|Assistente de voz Alexa, que atualmente não está habilitada para funcionar. *SEGURO DESATIVAR*.
+com.tcl.smartalexa|Assistente de voz Alexa. *SEGURO DESATIVAR*.
 com.tcl.MultiScreenInteraction_TV|Controla a TV pelo celular (T-Cast), função que raramente é utilizada pela API nativa dele. *SEGURO DESATIVAR*.
 com.android.providers.contacts|Embarcado pelo sistema Android nativo, exerce função de controle e exibição de contatos (pessoas) por API. Inútil em uma TV, *SEGURO DESATIVAR*.
 com.google.android.feedback|Telemetria do Google. *RECOMENDADO DESATIVAR*.
