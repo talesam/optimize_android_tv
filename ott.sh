@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.2.36"
+VER="v0.2.37"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -722,7 +722,7 @@ install_xplore(){
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o X-Plore, aguarde...${STD}"
-			adb install -r xplore.apk
+			adb install -r XploreFileManager4.22.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}X-Plore instalado com sucesso!${STD}"
