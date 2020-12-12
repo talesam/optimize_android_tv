@@ -5,7 +5,6 @@ com.tcl.ui_mediaCenter|Centro de mídia da TCL. Mal feito e inútil. *SEGURO DES
 com.tcl.messagebox|Widget do sistema, exibe no launcher padrão dados sobre a música em execução, status de dispositivos USB, conexão com internet. *SEGURO DESATIVAR*.
 com.tcl.notereminder|Mensageiro do sistema, responsável por encher o saco quando cai a conexão com internet, e afins. *RECOMENDADO DESATIVAR*.
 com.tcl.partnercustomizer|Embarcado pela TCL, inútil, é uma obrigação contratual da TCL com seus parceiros, força e privilegia conteúdo de parceiros. *RECOMENDADO DESATIVAR*.
-com.tcl.usercenter|Embarcado pela TCL, inútil. Parece que sobrou espaço na memória e resolveram encher linguiça. Mais do mesmo sobre conteúdo de parceiros. *RECOMENDADO DESATIVAR*.
 com.tcl.partnercustomizer.resource|Embarcado pela TCL. Motor de background que restaura o conteúdo de parceiros caso você os tenha removido. *RECOMENDADO DESATIVAR*.
 com.tcl.smartalexa|Assistente de voz Alexa. *SEGURO DESATIVAR*.
 com.tcl.MultiScreenInteraction_TV|Controla a TV pelo celular (T-Cast), função que raramente é utilizada pela API nativa dele. *SEGURO DESATIVAR*.
