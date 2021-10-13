@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.3.38"
+VER="v0.3.39"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -14,18 +14,18 @@ VER="v0.3.38"
 # Cores degrade
 RED001='\e[38;5;1m'		# Vermelho 1
 RED009='\e[38;5;9m'		# Vermelho 9
-CYA122='\e[38;5;122m'	# Ciano 122
+CYA122='\e[38;5;122m'		# Ciano 122
 CYA044='\e[38;5;44m'		# Ciano 44
 ROX063='\e[38;5;63m'		# Roxo 63
 ROX027='\e[38;5;27m'		# Roxo 27
 GRE046='\e[38;5;46m'		# Verde 46
-GRY247='\e[38;5;247m'	# Cinza 247
-LAR208='\e[38;5;208m'	# Laranja 208
-LAR214='\e[38;5;214m'	# Laranja 214
-AMA226='\e[38;5;226m'	# Amarelo 226
+GRY247='\e[38;5;247m'		# Cinza 247
+LAR208='\e[38;5;208m'		# Laranja 208
+LAR214='\e[38;5;214m'		# Laranja 214
+AMA226='\e[38;5;226m'		# Amarelo 226
 BLU039='\e[38;5;44m'		# Azul 39
 MAR094='\e[38;5;94m'		# Marrom 94
-MAR136='\e[38;5;136m'	# Marrom 136
+MAR136='\e[38;5;136m'		# Marrom 136
 
 # Cores chapadas
 CIN='\e[30;1m'			# Cinza
@@ -805,9 +805,9 @@ gravar_tela(){
 	echo ""
 	echo -e " ${LAR214}Bem vindo a gravação de Tela da TV, esse${STD}"
 	echo -e " ${LAR214}recurso é limitado a 3 minutos de gravação,${STD}"
-	echo -e " ${LAR214}porém após terminar uma gravação, outra é${STD}"
-	echo -e " ${LAR214}inicia automaticamnte em outro arquivo de${STD}"
-	echo -e " ${LAR214}mesmo nome, muda apenas o final, por exemplo:${STD}"
+	echo -e " ${LAR214}porém após terminar uma gravação outra se${STD}"
+	echo -e " ${LAR214}inicia automaticamnte em outro arquivo com${STD}"
+	echo -e " ${LAR214}mesmo nome, altera apenas o final, por exemplo:${STD}"
 	echo -e " ${LAR214}gravacao-001.mp4, gravacao-002.mp4.${STD}"
 	echo ""
 	echo -e " Para parar a gravação tecle ${NEG}[CTRL + C]${STD}"
@@ -864,15 +864,19 @@ menu_principal(){
 		echo ""
 		echo -e " ${CUI}FAÇA POR SUA CONTA E RISCO${STD}"
 		echo ""
-		echo -e " ${BLU}1.$STD ${RED009}Remover apps lixo (P8M)${STD}"
-		echo -e " ${BLU}2.$STD ${RED009}Remover apps lixo (S6500)${STD}"
-		echo -e " ${BLU}3.$STD ${GRY247}Desativar${STD}/${GRE046}Ativar apps${STD}"
-		echo -e " ${BLU}4.$STD ${BLU039}Launcher ATV Pro TCL Mod + Widget${STD}"
-		echo -e " ${BLU}5.$STD ${GRE046}Instalar novos apps${STD}"
-		echo -e " ${BLU}6.$STD ${AMA226}Gravar Tela da TV${STD} ${NEG}*EXPERIMENTAL*${STD}"
-		echo -e " ${BLU}7.$STD ${RED}Sair${STD}"
+		echo -e " ${BLU}1.${STD} ${RED009}Remover apps lixo (P8M)${STD}"
+		echo -e " ${BLU}2.${STD} ${RED009}Remover apps lixo (S6500)${STD}"
+		echo -e " ${BLU}3.${STD} ${GRY247}Desativar${STD}/${GRE046}Ativar apps${STD}"
+		echo -e " ${BLU}4.${STD} ${BLU039}Launcher ATV Pro TCL Mod + Widget${STD}"
+		echo -e " ${BLU}5.${STD} ${GRE046}Instalar novos apps${STD}"
+		echo -e " ${BLU}6.${STD} ${AMA226}Gravar Tela da TV${STD} ${NEG}*EXPERIMENTAL*${STD}"
+		echo -e " ${BLU}7.${STD} ${RED}Sair${STD}"
 		echo ""
 		read -p " Digite um número e tecle [Enter]:" option
+		echo ""
+		echo ""
+		echo -e "${YEL}FAÇA UMA DOAÇÃO E AJUDE ESTE PROJETO!${STD}"
+		echo -e "${BLU}PIX:${STD} ${ROS}talesam@gmail.com${STD}"
 		case "$option" in
 			1 ) rm_apps_p8m ;;
 			2 ) rm_apps_S6500 ;;
