@@ -37,7 +37,7 @@ ROS='\e[35;1m'			# Rosa
 CYA='\e[36;1m'			# Ciano
 NEG='\e[37;1m'			# Negrito
 CUI='\e[40;31;5m'		# Vermelho pisacando, aviso!
-STD='\e[m'				# Fechamento de cor
+STD='\e[m'		# Fechamento de cor
 
 # --- Início Funções ---
 
@@ -862,7 +862,10 @@ menu_principal(){
 		echo -e " ${LAR214}o sistema Android TV, removendo e desativando${STD}"
 		echo -e " ${LAR214}alguns apps e instalando outros.${STD}"
 		echo ""
-		echo -e " ${CUI}FAÇA POR SUA CONTA E RISCO${STD}"
+		echo ""
+		echo -e "${YEL}FAÇA UMA DOAÇÃO E AJUDE ESTE PROJETO!${STD}"
+		echo -e "${BLU}PIX:${STD} ${ROS}talesam@gmail.com${STD}"
+		echo ""
 		echo ""
 		echo -e " ${BLU}1.${STD} ${RED009}Remover apps lixo (P8M)${STD}"
 		echo -e " ${BLU}2.${STD} ${RED009}Remover apps lixo (S6500)${STD}"
@@ -873,10 +876,6 @@ menu_principal(){
 		echo -e " ${BLU}7.${STD} ${RED}Sair${STD}"
 		echo ""
 		read -p " Digite um número e tecle [Enter]:" option
-		echo ""
-		echo ""
-		echo -e "${YEL}FAÇA UMA DOAÇÃO E AJUDE ESTE PROJETO!${STD}"
-		echo -e "${BLU}PIX:${STD} ${ROS}talesam@gmail.com${STD}"
 		case "$option" in
 			1 ) rm_apps_p8m ;;
 			2 ) rm_apps_S6500 ;;
