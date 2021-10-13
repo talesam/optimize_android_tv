@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.2.37"
+VER="v0.3.38"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -15,16 +15,16 @@ VER="v0.2.37"
 RED001='\e[38;5;1m'		# Vermelho 1
 RED009='\e[38;5;9m'		# Vermelho 9
 CYA122='\e[38;5;122m'	# Ciano 122
-CYA044='\e[38;5;44m'	# Ciano 44
-ROX063='\e[38;5;63m'	# Roxo 63
-ROX027='\e[38;5;27m'	# Roxo 27
-GRE046='\e[38;5;46m'	# Verde 46
+CYA044='\e[38;5;44m'		# Ciano 44
+ROX063='\e[38;5;63m'		# Roxo 63
+ROX027='\e[38;5;27m'		# Roxo 27
+GRE046='\e[38;5;46m'		# Verde 46
 GRY247='\e[38;5;247m'	# Cinza 247
 LAR208='\e[38;5;208m'	# Laranja 208
 LAR214='\e[38;5;214m'	# Laranja 214
 AMA226='\e[38;5;226m'	# Amarelo 226
-BLU039='\e[38;5;44m'	# Azul 39
-MAR094='\e[38;5;94m'	# Marrom 94
+BLU039='\e[38;5;44m'		# Azul 39
+MAR094='\e[38;5;94m'		# Marrom 94
 MAR136='\e[38;5;136m'	# Marrom 136
 
 # Cores chapadas
@@ -398,8 +398,8 @@ install_laucher(){
 		# Baixa o Laucher ATV PRO modificado e o Widget
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando a versão mais recente do Laucher ATV PRO MOD e Widget...${STD}"
-		wget --content-disposition https://cloud.talesam.org/s/ZMz79soxAa7MYii/download
-		wget --content-disposition https://cloud.talesam.org/s/S8tJqBiiKmog4wt/download && clear
+		wget https://cloud.t4l35.host/s/YJ4st8xrbYAr5cD/download/tclhome.apk
+		wget https://cloud.t4l35.host/s/5c33tAF8ddyeXm7/download/chronus.apk && clear
 		if [ "$?" -ne 0 ]; then
 			pause " Erro ao baixar os arquivos, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_laucher
 		else
@@ -504,7 +504,7 @@ install_aptoidetv(){
 		# Baixa o Apdoide TV
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Aptoide TV...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/j5ZbDP5yL2DAT9J/download && clear
+		wget https://cloud.t4l35.host/s/76ZzGdWMGroaSaz/download/aptoide.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -525,27 +525,27 @@ install_aptoidetv(){
 	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
-# Instalar Deezer MOD
-install_deezermod(){
+# Instalar Deezer
+install_deezer(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep deezer.android.tv)" != "" ]; then
 		echo ""
-		echo -e " ${GRE}*${STD} ${NEG}Deezer MOD já está instalado.${STD}"
+		echo -e " ${GRE}*${STD} ${NEG}Deezer já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Deezer
 		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Baixando o Deezer MOD...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/8eBw4HGZryFyssf/download && clear
+		echo -e " ${BLU}*${STD} ${NEG}Baixando o Deezer...${STD}" && sleep 1
+		wget https://cloud.t4l35.host/s/xbToRz4sC6ZKBRK/download/deezer.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
 			echo ""
-			echo -e " ${BLU}*${STD} ${NEG}Instalando o Deezer MOD, aguarde...${STD}"
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Deezer, aguarde...${STD}"
 			adb install -r deezer.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
-				echo -e " ${GRE}*${STD} ${NEG}Deezer MOD instalado com sucesso!${STD}"
+				echo -e " ${GRE}*${STD} ${NEG}Deezer instalado com sucesso!${STD}"
 			else
 				echo ""
 				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
@@ -565,7 +565,7 @@ install_spotify(){
 		# Baixa o Spotify
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Spotify...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/t8w48i6px9b4FfZ/download && clear
+		wget https://cloud.t4l35.host/s/a2fPESw6f3J3RSZ/download/spotify.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -595,7 +595,7 @@ install_tvbro(){
 		# Baixa o TV Bro
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o TV Bro...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/SSC5C4QrPN7BzqZ/download && clear
+		wget https://cloud.t4l35.host/s/WBBoBmTiLcJ2obr/download/tvbro.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -615,24 +615,24 @@ install_tvbro(){
 	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
-# Instalar Smart Youtube
-install_smartyoutube(){
+# Instalar Smart Youtube Next
+install_stubenext(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.liskovsoft.videomanager)" != "" ]; then
 		echo ""
-		echo -e " ${GRE}*${STD} ${NEG}Smart Youtube já está instalado.${STD}"
+		echo -e " ${GRE}*${STD} ${NEG}Smart Youtube Next já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
-		# Baixa o Smart Youtube
+		# Baixa o Smart Youtube Next
 		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Baixando o Smart Youtube...${STD}" && sleep 1
-		wget --content-disposition https://github.com/yuliskov/SmartYouTubeTV/releases/download/stable/smartyoutubetv_latest.apk && clear
+		echo -e " ${BLU}*${STD} ${NEG}Baixando o Smart Youtube Next...${STD}" && sleep 1
+		wget https://cloud.t4l35.host/s/qR3nk53f9Zpgaxo/download/stubenext.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
 			echo ""
-			echo -e " ${BLU}*${STD} ${NEG}Instalando o Smart Youtube, aguarde...${STD}"
-			adb install -r smartyoutubetv_latest.apk
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Smart Youtube Next, aguarde...${STD}"
+			adb install -r stubenext.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Smart Youtube instalado com sucesso!${STD}"
@@ -645,27 +645,27 @@ install_smartyoutube(){
 	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
-# Instalar Crunchyroll
-install_crunchyroll(){
+# Instalar Send Files
+install_sendfiles(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.crunhyroll.crunchyroid)" != "" ]; then
 		echo ""
-		echo -e " ${GRE}*${STD} ${NEG}Crunchyroll já está instalado.${STD}"
+		echo -e " ${GRE}*${STD} ${NEG}Send Files já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
-		# Baixa o Crunchyroll
+		# Baixa o Send Files
 		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Baixando o Crunchyroll...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/reEAgSFBQsEtnS3/download && clear
+		echo -e " ${BLU}*${STD} ${NEG}Baixando o Send Files...${STD}" && sleep 1
+		wget https://cloud.t4l35.host/s/XfnGHSMZeNpnaA6/download/sendfiles.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
 			echo ""
-			echo -e " ${BLU}*${STD} ${NEG}Instalando o Crunchyroll, aguarde...${STD}"
-			adb install -r crunchyroll1-1.apk
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Send Files, aguarde...${STD}"
+			adb install -r sendfiles.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
-				echo -e " ${GRE}*${STD} ${NEG}Crunchyroll instalado com sucesso!${STD}"
+				echo -e " ${GRE}*${STD} ${NEG}Send Files instalado com sucesso!${STD}"
 			else
 				echo ""
 				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
@@ -675,27 +675,27 @@ install_crunchyroll(){
 	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
-# Instalar Stremio
-install_stremio(){
+# Instalar Youcine
+install_youcine(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.stremio.one)" != "" ]; then
 		echo ""
-		echo -e " ${GRE}*${STD} ${NEG}Stremio já está instalado.${STD}"
+		echo -e " ${GRE}*${STD} ${NEG}Youcine já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
 		# Baixa o Stremio
 		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Baixando o Stremio...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/Ej3B9n4GajL5xPw/download && clear
+		echo -e " ${BLU}*${STD} ${NEG}Baixando o Youcine...${STD}" && sleep 1
+		wget https://cloud.t4l35.host/s/Jif8ccwfAsQe9Ps/download/youcine.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
 			echo ""
-			echo -e " ${BLU}*${STD} ${NEG}Instalando o Stremio, aguarde...${STD}"
-			adb install -r stremio.apk
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Youcine, aguarde...${STD}"
+			adb install -r youcine.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
-				echo -e " ${GRE}*${STD} ${NEG}Stremio instalado com sucesso!${STD}"
+				echo -e " ${GRE}*${STD} ${NEG}Youcine instalado com sucesso!${STD}"
 			else
 				echo ""
 				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
@@ -715,14 +715,14 @@ install_xplore(){
 		# Baixa o X-Plore
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o X-Plore...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/gdZRePReC3d5Lx8/download && clear
+		wget https://cloud.t4l35.host/s/sEo25D5weiQ47FW/download/xplore.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o X-Plore, aguarde...${STD}"
-			adb install -r XploreFileManager4.22.apk
+			adb install -r Xplore.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}X-Plore instalado com sucesso!${STD}"
@@ -735,27 +735,27 @@ install_xplore(){
 	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
-# Instalar Popcorn Time
-install_popcorntime(){
+# Instalar Setting (Troca Laucher)
+install_setting(){
 	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep dp.ws.popcorntime)" != "" ]; then
 		echo ""
-		echo -e " ${GRE}*${STD} ${NEG}Popcorn Time já está instalado.${STD}"
+		echo -e " ${GRE}*${STD} ${NEG}Setting já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
-		# Baixa o Popcorn Time
+		# Baixa o Setting
 		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Baixando o Popcorn Time...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/WRmd9rgqiCFTBp4/download && clear
+		echo -e " ${BLU}*${STD} ${NEG}Baixando o Setting...${STD}" && sleep 1
+		wget https://cloud.t4l35.host/s/ZDX9nRGyoYmGrz9/download/setting.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
 			echo ""
-			echo -e " ${BLU}*${STD} ${NEG}Instalando o Popcorn Time, aguarde...${STD}"
-			adb install -r popcorntime.apk
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o Setting, aguarde...${STD}"
+			adb install -r setting.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
-				echo -e " ${GRE}*${STD} ${NEG}Popcorn Time instalado com sucesso!${STD}"
+				echo -e " ${GRE}*${STD} ${NEG}Setting instalado com sucesso!${STD}"
 			else
 				echo ""
 				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
@@ -766,34 +766,34 @@ install_popcorntime(){
 }
 
 # Instalar Photo Galley
-install_photogalley(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.furnaghan.android.photoscreensaver)" != "" ]; then
-		echo ""
-		echo -e " ${GRE}*${STD} ${NEG}Photo Galley já está instalado.${STD}"
-		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
-	else
-		# Baixa o Photo Galley
-		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Baixando o Photo Galley...${STD}" && sleep 1
-		wget --content-disposition https://cloud.talesam.org/s/ExKbcZKYeXZgimk/download && clear
-		if [ "$?" -ne 0 ]; then
-			echo ""
-			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
-		else
-			echo ""
-			echo -e " ${BLU}*${STD} ${NEG}Instalando o Photo Galley, aguarde...${STD}"
-			adb install -r photogallery.apk
-			if [ "$?" -eq "0" ]; then
-				echo ""
-				echo -e " ${GRE}*${STD} ${NEG}Photo Galley instalado com sucesso!${STD}"
-			else
-				echo ""
-				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
-			fi
-		fi
-	fi
-	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
-}
+#install_photogalley(){
+#	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.furnaghan.android.photoscreensaver)" != "" ]; then
+#		echo ""
+#		echo -e " ${GRE}*${STD} ${NEG}Photo Galley já está instalado.${STD}"
+#		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
+#	else
+#		# Baixa o Photo Galley
+#		echo ""
+#		echo -e " ${BLU}*${STD} ${NEG}Baixando o Photo Galley...${STD}" && sleep 1
+#		wget --content-disposition https://cloud.talesam.org/s/ExKbcZKYeXZgimk/download && clear
+#		if [ "$?" -ne 0 ]; then
+#			echo ""
+#			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
+#		else
+#			echo ""
+#			echo -e " ${BLU}*${STD} ${NEG}Instalando o Photo Galley, aguarde...${STD}"
+#			adb install -r photogallery.apk
+#			if [ "$?" -eq "0" ]; then
+#				echo ""
+#				echo -e " ${GRE}*${STD} ${NEG}Photo Galley instalado com sucesso!${STD}"
+#			else
+#				echo ""
+#				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
+#			fi
+#		fi
+#	fi
+#	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
+#}
 
 # --- INSTALAR NOVOS APPS - FIM
 
@@ -936,37 +936,37 @@ menu_laucher(){
 menu_install_apps(){ 
 	clear
 	option=0
-	until [ "$option" = "11" ]; do
+	until [ "$option" = "10" ]; do
 		separacao
 		echo -e " ${ROX027}Instalar Novos Apps${STD}"
 		separacao
 		echo ""
-		echo -e " ${BLU}1.${STD} Aptoide TV"
-		echo -e " ${BLU}2.${STD} Deezer MOD"
-		echo -e " ${BLU}3.${STD} Spotify MOD"
-		echo -e " ${BLU}4.${STD} TV Bro"
-		echo -e " ${BLU}5.${STD} Smart Youtube"
-		echo -e " ${BLU}6.${STD} Crunchyroll"
-		echo -e " ${BLU}7.${STD} Stremio"
-		echo -e " ${BLU}8.${STD} X-Plore"
-		echo -e " ${BLU}9.${STD} Popcorn Time"
-		echo -e " ${BLU}10.${STD} Photo Galley"
-		echo -e " ${BLU}11.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
+		echo -e " ${BLU}1.${STD} Aptoide TV - v5.1.2"
+		echo -e " ${BLU}2.${STD} Deezer MOD - v3.0"
+		echo -e " ${BLU}3.${STD} Spotify MOD - v1.12.0"
+		echo -e " ${BLU}4.${STD} TV Bro - v1.6.1"
+		echo -e " ${BLU}5.${STD} Smart Youtube Next - v12.50"
+		echo -e " ${BLU}6.${STD} Send Files - v1.2.2"
+		echo -e " ${BLU}7.${STD} Youcine - v1.1.2"
+		echo -e " ${BLU}8.${STD} X-Plore - v4.27.65"
+		echo -e " ${BLU}9.${STD} Setting (Trocar Laucher)"
+		#echo -e " ${BLU}10.${STD} Photo Galley"
+		echo -e " ${BLU}0.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
 		echo ""
 		read -p " Digite um número:" option
 		case $option in
 			1 ) install_aptoidetv ;;
-			2 ) install_deezermod ;;
+			2 ) install_deezer ;;
 			3 ) install_spotify ;;
 			4 ) install_tvbro ;;
-			5 ) install_smartyoutube ;;
-			6 ) install_crunchyroll ;;
-			7 ) install_stremio ;;
+			5 ) install_stubenext ;;
+			6 ) install_sendfiles ;;
+			7 ) install_youcine ;;
 			8 ) install_xplore ;;
-			9 ) install_popcorntime ;;
-			10 ) install_photogalley ;;
-			11 ) menu_principal ;;
-			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD}${NEG},${STD} ${ROS}6${STD}${NEG},${STD} ${ROS}7${STD}${NEG},${STD} ${ROS}8${STD}${NEG},${STD} ${ROS}9${STD}${NEG},${STD} ${ROS}10${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}11${STD}";
+			9 ) install_setting ;;
+			#10 ) install_photogalley ;;
+			0 ) menu_principal ;;
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD}${NEG},${STD} ${ROS}6${STD}${NEG},${STD} ${ROS}7${STD}${NEG},${STD} ${ROS}8${STD}${NEG},${STD} ${ROS}9${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}0${STD}";
 		esac
 	done
 }
