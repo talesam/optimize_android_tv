@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.3.39"
+VER="v0.3.40"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -37,7 +37,7 @@ ROS='\e[35;1m'			# Rosa
 CYA='\e[36;1m'			# Ciano
 NEG='\e[37;1m'			# Negrito
 CUI='\e[40;31;5m'		# Vermelho pisacando, aviso!
-STD='\e[m'		# Fechamento de cor
+STD='\e[m'			# Fechamento de cor
 
 # --- Início Funções ---
 
@@ -67,7 +67,7 @@ termux(){
 		pause " Tecle [Enter] para continuar..." ; conectar_tv
 	else
 		echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script no Termux...${SDT}" && sleep 2
-		apt update && apt -y install wget && wget https://raw.githubusercontent.com/MasterDevX/Termux-ADB/master/InstallTools.sh && bash InstallTools.sh && clear
+		pkg install -y wget && wget https://raw.githubusercontent.com/MasterDevX/Termux-ADB/master/InstallTools.sh && bash InstallTools.sh && clear
 		if [ "$?" -eq "0" ]; then
 			echo ""
 			echo -e " ${GRE}*${STD} ${NEG}Instalação conluida com sucesso!${STD}"
