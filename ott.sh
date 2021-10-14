@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.3.40"
+VER="v0.3.41"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -113,12 +113,15 @@ conectar_tv(){
 				pause " Tecle [Enter] para continuar..." ;
 				# Testa se o humano marcou a opção na TV
 				if [ "$(adb shell pm list packages -e 2>/dev/null)" = "0" ]; then
-					menu_principal
-				else
-					echo ""
-					echo -e " ${CYA}Não me engana, você ainda\n não marcou a opção na TV :-(\n Vou te dar outra chance!${STD}"
-					echo ""
-					pause " Ative a opção e tecle [Enter]"
+					adb disconnect $IP 2>/dev/null && adb connect $IP 2>/dev/null
+					if [ "$(adb connect $IP | cut -f1 -d" ")" = "connected" ]; then
+						menu_principal
+					else
+						echo ""
+						echo -e " ${CYA}Não me engana, você ainda\n não marcou a opção na TV :-(\n Vou te dar outra chance!${STD}"
+						echo ""
+						pause " Ative a opção e tecle [Enter]"
+					fi
 				fi
 			done
 				menu_principal
