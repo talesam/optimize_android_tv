@@ -102,7 +102,7 @@ conectar_tv(){
 			echo ""
 			clear
 			until adb shell pm list packages -e 2>/dev/null; do
-			clear
+			#clear
 				echo -e " ${CYA122}Apareceu a seguinte janela em sua TV:${STD}"
 				echo -e " ${NEG}Permitir a depuração USB?${STD}"
 				echo ""
@@ -111,17 +111,15 @@ conectar_tv(){
 				echo -e " ${CYA122}Depois de marcar a caixa e der${STD} ${NEG}OK${STD}"
 				echo ""
 				pause " Tecle [Enter] para continuar..." ;
-				# Testa se o humano marcou a opção na TV
-				if [ "$(adb shell pm list packages -e 2>/dev/null)" = "0" ]; then
-					adb disconnect $IP 2>/dev/null && adb connect $IP 2>/dev/null
-					if [ "$(adb connect $IP | cut -f1 -d" ")" = "connected" ]; then
-						menu_principal
-					else
-						echo ""
-						echo -e " ${CYA}Não me engana, você ainda\n não marcou a opção na TV :-(\n Vou te dar outra chance!${STD}"
-						echo ""
-						pause " Ative a opção e tecle [Enter]"
-					fi
+				# Testa se o humano marcou a opção na TV			
+				adb disconnect $IP 2>/dev/null && adb connect $IP 2>/dev/null
+				if [ "$(adb connect $IP | cut -f1,2 -d" ")" = "already connected" ]; then
+					menu_principal
+				else
+					echo ""
+					echo -e " ${CYA}Não me engana, você ainda\n não marcou a opção na TV :-(\n Vou te dar outra chance!${STD}"
+					echo ""
+					pause " Ative a opção e tecle [Enter]"
 				fi
 			done
 				menu_principal
@@ -861,13 +859,13 @@ menu_principal(){
 			fi
 		fi
 		echo ""
-		echo -e " ${LAR214}Este script possui a finalidade de otimizar${STD}"
-		echo -e " ${LAR214}o sistema Android TV, removendo e desativando${STD}"
-		echo -e " ${LAR214}alguns apps e instalando outros.${STD}"
+		echo -e " ${GRY247}Este script possui a finalidade de otimizar${STD}"
+		echo -e " ${GRY247}o sistema Android TV, removendo e desativando${STD}"
+		echo -e " ${GRY247}alguns apps e instalando outros.${STD}"
 		echo ""
 		echo ""
-		echo -e "${YEL}FAÇA UMA DOAÇÃO E AJUDE ESTE PROJETO!${STD}"
-		echo -e "${BLU}PIX:${STD} ${ROS}talesam@gmail.com${STD}"
+		echo -e " ${YEL}FAÇA UMA DOAÇÃO E AJUDE ESTE PROJETO!${STD}"
+		echo -e " ${BLU}PIX:${STD} ${ROS}talesam@gmail.com${STD}"
 		echo ""
 		echo ""
 		echo -e " ${BLU}1.${STD} ${RED009}Remover apps lixo (P8M)${STD}"
@@ -876,7 +874,7 @@ menu_principal(){
 		echo -e " ${BLU}4.${STD} ${BLU039}Launcher ATV Pro TCL Mod + Widget${STD}"
 		echo -e " ${BLU}5.${STD} ${GRE046}Instalar novos apps${STD}"
 		echo -e " ${BLU}6.${STD} ${AMA226}Gravar Tela da TV${STD} ${NEG}*EXPERIMENTAL*${STD}"
-		echo -e " ${BLU}7.${STD} ${RED}Sair${STD}"
+		echo -e " ${BLU}0.${STD} ${RED}Sair${STD}"
 		echo ""
 		read -p " Digite um número e tecle [Enter]:" option
 		case "$option" in
@@ -886,8 +884,8 @@ menu_principal(){
 			4 ) menu_laucher ;;
 			5 ) menu_install_apps ;;
 			6 ) gravar_tela ;;
-			7 ) exit ; adb disconnect $IP >/dev/null ;;
-			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD},${STD} ${ROS}6${STD} ${NEG}ou${STD} ${ROS}7${STD}"; 
+			0 ) exit ; adb disconnect $IP >/dev/null ;;
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD},${STD} ${ROS}6${STD} ${NEG}ou${STD} ${ROS}0 para Sair${STD}"; 
 		esac
 	done
 }
@@ -972,7 +970,7 @@ menu_install_apps(){
 			9 ) install_setting ;;
 			#10 ) install_photogalley ;;
 			0 ) menu_principal ;;
-			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD}${NEG},${STD} ${ROS}6${STD}${NEG},${STD} ${ROS}7${STD}${NEG},${STD} ${ROS}8${STD}${NEG},${STD} ${ROS}9${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}0${STD}";
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD}${NEG},${STD} ${ROS}6${STD}${NEG},${STD} ${ROS}7${STD}${NEG},${STD} ${ROS}8${STD}${NEG},${STD} ${ROS}9${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}0 para sair${STD}";
 		esac
 	done
 }
