@@ -17,4 +17,4 @@ Após o comando acima, para chamar o script novamente basta digitar:
 
 `bash ott.sh`
 
-![alt Script rodando no Termux](https://cloud.talesam.org/s/Fab4sqqbsF4ZoFW/preview)
+![alt Script rodando no Termux](https://cloud.t4l35.host/s/bM76krcxkXAk53p/preview)
