@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.3.41"
+VER="v0.3.42"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -399,8 +399,9 @@ install_laucher(){
 		# Baixa o Laucher ATV PRO modificado e o Widget
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando a versão mais recente do Laucher ATV PRO MOD e Widget...${STD}"
-		wget https://cloud.t4l35.host/s/YJ4st8xrbYAr5cD/download/tclhome.apk
-		wget https://cloud.t4l35.host/s/5c33tAF8ddyeXm7/download/chronus.apk && clear
+		wget https://cloud.talesam.org/s/YJ4st8xrbYAr5cD/download/tclhome.apk
+		wget https://cloud.talesam.org/s/5c33tAF8ddyeXm7/download/chronus.apk && clear
+		
 		if [ "$?" -ne 0 ]; then
 			pause " Erro ao baixar os arquivos, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_laucher
 		else
@@ -505,7 +506,7 @@ install_aptoidetv(){
 		# Baixa o Apdoide TV
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Aptoide TV...${STD}" && sleep 1
-		wget https://cloud.t4l35.host/s/76ZzGdWMGroaSaz/download/aptoide.apk && clear
+		wget https://cloud.talesam.org/s/76ZzGdWMGroaSaz/download/aptoide.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -536,7 +537,7 @@ install_deezer(){
 		# Baixa o Deezer
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Deezer...${STD}" && sleep 1
-		wget https://cloud.t4l35.host/s/xbToRz4sC6ZKBRK/download/deezer.apk && clear
+		wget https://cloud.talesam.org/s/xbToRz4sC6ZKBRK/download/deezer.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -566,7 +567,7 @@ install_spotify(){
 		# Baixa o Spotify
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Spotify...${STD}" && sleep 1
-		wget https://cloud.t4l35.host/s/a2fPESw6f3J3RSZ/download/spotify.apk && clear
+		wget https://cloud.talesam.org/s/a2fPESw6f3J3RSZ/download/spotify.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -596,7 +597,7 @@ install_tvbro(){
 		# Baixa o TV Bro
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o TV Bro...${STD}" && sleep 1
-		wget https://cloud.t4l35.host/s/WBBoBmTiLcJ2obr/download/tvbro.apk && clear
+		wget https://cloud.talesam.org/s/WBBoBmTiLcJ2obr/download/tvbro.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -626,7 +627,7 @@ install_stubenext(){
 		# Baixa o Smart Youtube Next
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Smart Youtube Next...${STD}" && sleep 1
-		wget https://cloud.t4l35.host/s/qR3nk53f9Zpgaxo/download/stubenext.apk && clear
+		wget https://cloud.talesam.org/s/qR3nk53f9Zpgaxo/download/stubenext.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -686,7 +687,7 @@ install_youcine(){
 		# Baixa o Stremio
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Youcine...${STD}" && sleep 1
-		wget https://cloud.t4l35.host/s/Jif8ccwfAsQe9Ps/download/youcine.apk && clear
+		wget https://cloud.talesam.org/s/Jif8ccwfAsQe9Ps/download/youcine.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -716,7 +717,7 @@ install_xplore(){
 		# Baixa o X-Plore
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o X-Plore...${STD}" && sleep 1
-		wget https://cloud.t4l35.host/s/sEo25D5weiQ47FW/download/xplore.apk && clear
+		wget https://cloud.talesam.org/s/sEo25D5weiQ47FW/download/xplore.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -746,7 +747,7 @@ install_setting(){
 		# Baixa o Setting
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Setting...${STD}" && sleep 1
-		wget https://cloud.t4l35.host/s/ZDX9nRGyoYmGrz9/download/setting.apk && clear
+		wget https://cloud.talesam.org/s/ZDX9nRGyoYmGrz9/download/setting.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
