@@ -21,4 +21,5 @@ Após o comando acima, para chamar o script novamente basta digitar:
 bash ott.sh
 ```
 
-![alt Script rodando no Termux](https://cloud.t4l35.host/s/bM76krcxkXAk53p/preview)
+
+![Imagem Script otimizar Android TV (TCL)](https://user-images.githubusercontent.com/981368/164861661-b15ff4b7-b1ba-434c-ab28-9af02ef311e8.png)
