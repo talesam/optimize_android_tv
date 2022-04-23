@@ -62,7 +62,7 @@ termux(){
 	separacao
 	echo ""
 	echo -e " ${ROX063}Verificando dependências, aguarde...${STD}" && sleep 1
-	if [ "ls /data/data/com.termux/files/usr/bin/adb.bin > /dev/null" ] || [ "ls /usr/bin/adb > /dev/null" ]; then
+	if [ "ls /data/data/com.termux/files/usr/bin/adb.bin > /dev/null" ] && [ "ls /data/data/com.termux/files/usr/bin/fakeroot > /dev/null" ] || [ "ls /usr/bin/adb > /dev/null" ]; then
 		echo -e " ${GRE046}Dependencias encontradas, conecte-se na TV.${STD}"
 		echo ""
 		pause " Tecle [Enter] para continuar..." ; conectar_tv
