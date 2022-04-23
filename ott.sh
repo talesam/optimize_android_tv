@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.3.44"
+VER="v0.4.44"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -57,8 +57,14 @@ pause(){
 termux(){
 	clear
 	echo ""
+	separacao
 	echo -e " ${NEG}Bem vindo(a) ao script OTT (Otimização TV TCL)${STD}"
-	echo -e " ${NEG}Modelos compatíveis:${STD} ${CYA}P8M${STD}, ${CYA}P615${STD}, ${CYA}P715${STD}, ${CYA}S6500${STD} e ${CYA}S5300.${STD}"
+	echo ""
+	echo -e " ${NEG}Modelos compatíveis:${STD}"
+	echo -e " ${ROS}RT41 = ${STD}${CYA}ES560${STD}, ${CYA}S6500${STD}, ${CYA}S5300${STD}, ${CYA}S615${STD}"
+	echo -e " ${ROS}RT51 = ${STD}${CYA}P8M${STD}, ${CYA}SK8300${STD}, ${CYA}P615${STD}, ${CYA}P715${STD}, ${CYA}C715${STD}, ${CYA}C815${STD}"
+	echo -e " ${ROS}R51M = ${STD}${CYA}P725${STD}, ${CYA}C725${STD}"
+	echo -e " ${ROS}MT9615 = ${STD}${CYA}C825${STD}"
 	separacao
 	echo ""
 	echo -e " ${ROX063}Verificando dependências, aguarde...${STD}" && sleep 1
@@ -939,7 +945,7 @@ menu_principal(){
 	option=0
 	until [ "$option" = "7" ]; do
 		echo ""
-		echo -e " ${CYA}OTMIZAÇÃO TV TCL P8M, S6500 e S5300${STD} - ${YEL}$VER${STD}"
+		echo -e " ${CYA}OTMIZAÇÃO TV TCL${STD} - ${YEL}$VER${STD}"
 
 		# Verifica o Status da TV, se está conectada ou não via adb
 		ping -c 1 $IP >/dev/null 2>&1
