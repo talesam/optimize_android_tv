@@ -76,8 +76,8 @@ termux(){
 		pause " Tecle [Enter] para continuar..." ; conectar_tv
 	else
 		echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script, aguarde...${SDT}" && sleep 1
-		pkg update -y -o Dpkg::Options::=--force-confold >/dev/null 2>&1
-		pkg install -y android-tools && pkg install -y fakeroot >/dev/null 2>&1
+		pkg update -y -o Dpkg::Options::=--force-confold > /dev/null
+		pkg install -y android-tools && pkg install -y fakeroot > /dev/null
 		if [ "$?" -eq "0" ]; then
 			echo ""
 			echo -e " ${GRE}*${STD} ${NEG}Instalação conluida com sucesso!${STD}"
@@ -109,7 +109,7 @@ conectar_tv(){
 	if [ "$?" -eq "0" ]; then
 		echo ""
 		echo -e " ${LAR214}Conectando-se a sua TV...${STD}" && sleep 2
-		fakeroot adb connect $IP >/dev/null
+		fakeroot adb connect $IP > /dev/null 2>&1
 		if [ "$?" -eq "0" ]; then
 			echo -e " ${GRE046}Conectado com sucesso a TV!${STD}" && sleep 2
 			echo ""
