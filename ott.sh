@@ -67,13 +67,14 @@ termux(){
 	echo -e " ${ROS}MT9615 = ${STD}${CYA}C825${STD}"
 	separacao
 	echo ""
+	pause " Tecle [Enter] para continuar..."
+	echo ""
 	echo -e " ${ROX063}Verificando dependências, aguarde...${STD}" && sleep 1
 	if [ -e "/data/data/com.termux/files/usr/bin/adb.bin" ] && [ -e "/data/data/com.termux/files/usr/bin/fakeroot" ] || [ -e "/usr/bin/adb" ]; then
 		echo -e " ${GRE046}Dependencias encontradas, conecte-se na TV.${STD}"
 		echo ""
 		pause " Tecle [Enter] para continuar..." ; conectar_tv
 	else
-		pause " Tecle [Enter] para continuar..."
 		echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script, aguarde...${SDT}" && sleep 1
 		pkg update -y -o Dpkg::Options::=--force-confold >/dev/null 2>&1
 		pkg install -y android-tools && pkg install -y fakeroot >/dev/null 2>&1
