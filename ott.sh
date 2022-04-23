@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Otimizações Android TV
 # Por Tales A. Mendonça - talesam@gmail.com
-# Agradecimento ao Bruno Gonçalvez Araujo, Rodrigo Carpes e @gr1m
+# Agradecimento ao Bruno Gonçalvez Araujo, Rodrigo Carpes, @gr1m e Mesquita (@mickaelmendes50)
 # https://developer.android.com/studio/command-line/adb
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.3.42"
+VER="v0.3.44"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -56,18 +56,20 @@ pause(){
 # Verifica se está usando Termux
 termux(){
 	clear
+	echo ""
 	echo -e " ${NEG}Bem vindo(a) ao script OTT (Otimização TV TCL)${STD}"
-	echo -e " ${NEG}Modelos compatíveis: P8M, S6500 e S5300.${STD}"
+	echo -e " ${NEG}Modelos compatíveis:${STD} ${CYA}P8M${STD}, ${CYA}P615${STD}, ${CYA}P715${STD}, ${CYA}S6500${STD} e ${CYA}S5300.${STD}"
 	separacao
 	echo ""
-	echo -e " ${ROX063}Verificando dependências, aguarde...${STD}" && sleep 2
-	if [ -e "/data/data/com.termux/files/usr/bin/adb.bin" ] || [ -e "/usr/bin/adb" ]; then
+	echo -e " ${ROX063}Verificando dependências, aguarde...${STD}" && sleep 1
+	if [ -f "/data/data/com.termux/files/usr/bin/adb.bin" ] || [ -f "/usr/bin/adb" ]; then
 		echo -e " ${GRE046}Dependencias encontradas, conecte-se na TV.${STD}"
 		echo ""
 		pause " Tecle [Enter] para continuar..." ; conectar_tv
 	else
-		echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script no Termux...${SDT}" && sleep 2
-		pkg install -y wget && wget https://raw.githubusercontent.com/MasterDevX/Termux-ADB/master/InstallTools.sh && bash InstallTools.sh && clear
+		echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script no Termux...${SDT}" && sleep 1
+		pkg update -y -o Dpkg::Options::=--force-confold
+		pkg install -y android-tools && pkg install -y fakeroot && clear
 		if [ "$?" -eq "0" ]; then
 			echo ""
 			echo -e " ${GRE}*${STD} ${NEG}Instalação conluida com sucesso!${STD}"
@@ -83,6 +85,8 @@ termux(){
 # Conexão da TV
 conectar_tv(){
 	clear
+	export ANDROID_NO_USE_FWMARK_CLIENT=1
+	echo ""
 	echo " Digite o endereço IP da sua TV que encontra no"
 	echo -e " caminho abaixo e tecle ${NEG}[Enter]${STD} para continuar:"
 	echo ""
@@ -92,17 +96,17 @@ conectar_tv(){
 	read IP
 
 	ping -c 1 $IP >/dev/null
+
 	# Testa se a TV está ligada com o modo depuração ativo
 	if [ "$?" -eq "0" ]; then
 		echo ""
-		echo -e " ${LAR214}Conectando-se a sua TV...${STD}" && sleep 3
-		adb connect $IP >/dev/null
+		echo -e " ${LAR214}Conectando-se a sua TV...${STD}" && sleep 2
+		fakeroot adb connect $IP >/dev/null
 		if [ "$?" -eq "0" ]; then
-			echo -e " ${GRE046}Conectado com sucesso a TV!${STD}" && sleep 3
+			echo -e " ${GRE046}Conectado com sucesso a TV!${STD}" && sleep 2
 			echo ""
 			clear
-			until adb shell pm list packages -e 2>/dev/null; do
-			#clear
+			until fakeroot adb shell pm list packages -e 2>/dev/null; do
 				echo -e " ${CYA122}Apareceu a seguinte janela em sua TV:${STD}"
 				echo -e " ${NEG}Permitir a depuração USB?${STD}"
 				echo ""
@@ -111,9 +115,10 @@ conectar_tv(){
 				echo -e " ${CYA122}Depois de marcar a caixa e der${STD} ${NEG}OK${STD}"
 				echo ""
 				pause " Tecle [Enter] para continuar..." ;
+				
 				# Testa se o humano marcou a opção na TV			
-				adb disconnect $IP 2>/dev/null && adb connect $IP 2>/dev/null
-				if [ "$(adb connect $IP | cut -f1,2 -d" ")" = "already connected" ]; then
+				fakeroot adb disconnect $IP 2>/dev/null && fakeroot adb connect $IP 2>/dev/null
+				if [ "$(fakeroot adb connect $IP | cut -f1,2 -d" ")" = "already connected" ]; then
 					menu_principal
 				else
 					echo ""
@@ -138,10 +143,11 @@ rm_apps_p8m(){
 	clear
 	OIFS=$IFS
 	IFS=$'\n'
+
 	# Verifica se o arquivo existe
 	if [ -e "rm_apps_p8m.list" ]; then
 		for app_rm in $(cat rm_apps_p8m.list); do
-			adb shell pm uninstall --user 0 $app_rm >/dev/null
+			fakeroot adb shell pm uninstall --user 0 $app_rm >/dev/null
 			if [ "$?" -eq "0" ]; then
 				echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 			else
@@ -149,12 +155,13 @@ rm_apps_p8m(){
 			fi
 		done
 	else
+
 		# Baixar lista lixo dos apps
 		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista negra de apps...${STD}" && sleep 2
 		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_p8m.list && clear
 		if [ -e "rm_apps_p8m.list" ]; then
 			for app_rm in $(cat rm_apps_p8m.list); do
-				adb shell pm uninstall --user 0 $app_rm >/dev/null
+				fakeroot adb shell pm uninstall --user 0 $app_rm >/dev/null
 				if [ "$?" -eq "0" ]; then
 					echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 				else
@@ -177,10 +184,11 @@ rm_apps_S6500(){
 	clear
 	OIFS=$IFS
 	IFS=$'\n'
+
 	# Verifica se o arquivo existe
 	if [ -e "rm_apps_S6500.list" ]; then
 		for app_rm in $(cat rm_apps_S6500.list); do
-			adb shell pm uninstall --user 0 $app_rm >/dev/null
+			fakeroot adb shell pm uninstall --user 0 $app_rm >/dev/null
 			if [ "$?" -eq "0" ]; then
 				echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 			else
@@ -188,12 +196,13 @@ rm_apps_S6500(){
 			fi
 		done
 	else
+
 		# Baixar lista lixo dos apps
 		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista negra de apps...${STD}" && sleep 2
 		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_S6500.list && clear
 		if [ -e "rm_apps_S6500.list" ]; then
 			for app_rm in $(cat rm_apps_S6500.list); do
-				adb shell pm uninstall --user 0 $app_rm >/dev/null
+				fakeroot adb shell pm uninstall --user 0 $app_rm >/dev/null
 				if [ "$?" -eq "0" ]; then
 					echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
 				else
@@ -220,7 +229,8 @@ ativar() {
 	OIFS=$IFS
 	IFS=$'\n'
 	
-	apk_disabled="$(adb shell pm list packages -d | cut -f2 -d:)"
+	apk_disabled="$(fakeroot adb shell pm list packages -d | cut -f2 -d:)"
+
 	# Verifica se o arquivo existe no diretório local
 	if [ -e "apps_disable.list" ]; then
 		for apk_full in $(cat apps_disable.list); do
@@ -232,6 +242,7 @@ ativar() {
 			fi
 		done
 	else
+
 		# Baixar lista de apps para serem desativados
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista de apps...${STD}" && sleep 1
@@ -262,7 +273,7 @@ pergunta_ativar() {
 }
 
 resposta_ativar() {
-	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${LAR208}"Informação sobre o pacote${STD} ${CYA044}${apk}${STD}";adb shell pm enable ${apk};}
+	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${LAR208}"Informação sobre o pacote${STD} ${CYA044}${apk}${STD}";fakeroot adb shell pm enable ${apk};}
 }
 
 desativar() {
@@ -271,7 +282,8 @@ desativar() {
 	OIFS=$IFS
 	IFS=$'\n'
 	
-	apk_disabled="$(adb shell pm list packages -d | cut -f2 -d:)"
+	apk_disabled="$(fakeroot adb shell pm list packages -d | cut -f2 -d:)"
+
 	# Verifica se o arquivo existe no diretório local
 	if [ -e "apps_disable.list" ]; then
 		for apk_full in $(cat apps_disable.list); do
@@ -283,6 +295,7 @@ desativar() {
 			fi
 		done
 	else
+
 		# Baixar lista de apps para serem desativados
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista de apps...${STD}" && sleep 1
@@ -313,7 +326,7 @@ pergunta_desativar() {
 }
 
 resposta_desativar() {
-	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${LAR208}"Informação sobre o pacote${STD} ${CYA044}${apk}${STD}";adb shell pm disable-user --user 0 ${apk};}
+	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${LAR208}"Informação sobre o pacote${STD} ${CYA044}${apk}${STD}";fakeroot adb shell pm disable-user --user 0 ${apk};}
 }
 
 linha() {
@@ -321,154 +334,255 @@ linha() {
 }
 # Desativar/Ativar Apps - FIM
 
-# Instalar e ativar Laucher ATV Pro TCL Mod + Widget
-install_laucher(){
+# Instalar e ativar Launcher ATV Pro TCL Mod + Widget
+install_launcher(){
+
 	# Remove versão do ATV PRO
-	if [ "$(adb shell pm list packages -u | cut -f2 -d: | grep ca.dstudio.atvlauncher.pro)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -u | cut -f2 -d: | grep ca.dstudio.atvlauncher.pro)" != "" ]; then
 		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Removendo versão do Laucher ATV PRO...${STD}" && sleep 1
+		echo -e " ${BLU}*${STD} ${NEG}Removendo versão do Launcher ATV PRO...${STD}" && sleep 1
 		echo ""
-		adb shell pm uninstall --user 0 ca.dstudio.atvlauncher.pro
+		fakeroot adb shell pm uninstall --user 0 ca.dstudio.atvlauncher.pro
 		if [ "$?" -eq "0" ]; then
-			echo -e " ${GRE}*${STD} ${NEG}Laucher ATV PRO removido com sucesso!${STD}"
+			echo -e " ${GRE}*${STD} ${NEG}Launcher ATV PRO removido com sucesso!${STD}"
 		else
 			echo ""
-			echo -e " ${RED}*${STD} ${NEG}Erro ao remover Laucher ATV PRO.${STD}"
+			echo -e " ${RED}*${STD} ${NEG}Erro ao remover Launcher ATV PRO.${STD}"
 			pause " Tecle [Enter] para continuar com a instalação..."
 		fi
 	fi
 
 	# Remove versão do ATV FREE
-	if [ "$(adb shell pm list packages -u | cut -f2 -d: | grep ca.dstudio.atvlauncher.pro)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -u | cut -f2 -d: | grep ca.dstudio.atvlauncher.pro)" != "" ]; then
 		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Removendo versão do Laucher ATV FRE...${STD}" && sleep 1
+		echo -e " ${BLU}*${STD} ${NEG}Removendo versão do Launcher ATV FRE...${STD}" && sleep 1
 		echo ""
-		adb shell pm uninstall --user 0 ca.dstudio.atvlauncher.free
+		fakeroot adb shell pm uninstall --user 0 ca.dstudio.atvlauncher.free
 		if [ "$?" -eq "0" ]; then
-			echo -e " ${GRE}*${STD} ${NEG}Laucher ATV FREE removido com sucesso!${STD}"
+			echo -e " ${GRE}*${STD} ${NEG}Launcher ATV FREE removido com sucesso!${STD}"
 		else
-			echo -e " ${RED}*${STD} ${NEG}Erro ao remover Laucher ATV FREE.${STD}"
+			echo -e " ${RED}*${STD} ${NEG}Erro ao remover Launcher ATV FREE.${STD}"
 			pause " Tecle [Enter] para continuar com a instalação..."
 		fi
 	fi
 
-	if [ "$(adb shell pm list packages -u | cut -f2 -d: | grep com.tcl.home)" != "" ]; then
-		if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.tcl.home)" = "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -u | cut -f2 -d: | grep com.tcl.home)" != "" ]; then
+		if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.tcl.home)" = "" ]; then
 			echo ""
-			echo -e " ${BLU}*${STD} ${NEG}Ativando Laucher ATV PRO MOD...${STD}" && sleep 1
-			adb shell pm enable com.tcl.home
+			echo -e " ${BLU}*${STD} ${NEG}Ativando Launcher ATV PRO MOD...${STD}" && sleep 1
+			fakeroot adb shell pm enable com.tcl.home
 			if [ "$?" -eq "0" ]; then
-				# Desativa o laucher padrão
-				adb shell pm disable-user --user 0 com.google.android.tvlauncher
-				if [ "$(adb shell pm disable-user --user 0 com.google.android.tvlauncher | grep disabled-user | cut -f5 -d " ")" = "disabled-user" ]; then
+
+				# Desativa o Launcher padrão
+				fakeroot adb shell pm disable-user --user 0 com.google.android.tvlauncher
+				if [ "$(fakeroot adb shell pm disable-user --user 0 com.google.android.tvlauncher | grep disabled-user | cut -f5 -d " ")" = "disabled-user" ]; then
 					echo ""
-					echo -e " ${GRE}*${STD} ${NEG}Laucher ATV PRO MOD ativo com sucesso!${STD}"
+					echo -e " ${GRE}*${STD} ${NEG}Launcher ATV PRO MOD ativo com sucesso!${STD}"
 					echo ""
-					echo -e " ${BLU}*${STD} ${NEG}Iniciando a nova Laucher ATV PRO MOD, aguarde...${STD}" && sleep 1
-					adb shell monkey -p com.tcl.home -c android.intent.category.LAUNCHER 1
+					echo -e " ${BLU}*${STD} ${NEG}Iniciando a nova Launcher ATV PRO MOD, aguarde...${STD}" && sleep 1
+					fakeroot adb shell monkey -p com.tcl.home -c android.intent.category.LAUNCHER 1
 					if [ "$?" -eq "0" ]; then
 						echo ""
-						echo -e " ${GRE}*${STD} ${NEG}Laucher ATV PRO MOD iniciado com sucesso!${STD}" && sleep 1
+						echo -e " ${GRE}*${STD} ${NEG}Launcher ATV PRO MOD iniciado com sucesso!${STD}" && sleep 1
 						echo ""
 						echo -e " ${BLU}*${STD} ${NEG}Atualizando as permissões...${STD}"
+
 						# Seta permissão para o widget
-						adb shell appwidget grantbind --package com.tcl.home --user 0
+						fakeroot adb shell appwidget grantbind --package com.tcl.home --user 0
 						if [ "$?" -eq "0" ]; then
 							echo ""
 							echo -e " ${GRE}*${STD} ${NEG}Permissões atualizadas com sucesso!${STD}"
 						else
-							pause " Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+							pause " Erro ao ativar o Launcher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_launcher
 						fi
 					else
-						pause " Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+						pause " Erro ao ativar o Launcher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_launcher
 					fi
 				else
-					pause " Erro ao ativar o Laucher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+					pause " Erro ao ativar o Launcher, verifique sua conexão. Tecle [Enter] para continuar." ; menu_launcher
 				fi
 			else
-				pause " Erro ao ativar Laucher ATV MOD. Tecle [Enter] para retornar ao menu" ; menu_laucher
+				pause " Erro ao ativar Launcher ATV MOD. Tecle [Enter] para retornar ao menu" ; menu_launcher
 			fi
 		else
 			echo ""
-			echo -e " ${BLU}*${STD} ${NEG}Laucher ATV PRO MOD já está ativo.${STD}"
-			pause " Tecle [Enter] para retornar ao menu" ; menu_laucher
+			echo -e " ${BLU}*${STD} ${NEG}Launcher ATV PRO MOD já está ativo.${STD}"
+			pause " Tecle [Enter] para retornar ao menu" ; menu_launcher
 		fi
 	else
 		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Aguarde a instalação do novo Laucher ATV PRO MOD...${STD}" && sleep 2
-		# Baixa o Laucher ATV PRO modificado e o Widget
+		echo -e " ${BLU}*${STD} ${NEG}Aguarde a instalação do novo Launcher ATV PRO MOD...${STD}" && sleep 2
+		
+		# Baixa o Launcher ATV PRO modificado e o Widget
 		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Baixando a versão mais recente do Laucher ATV PRO MOD e Widget...${STD}"
+		echo -e " ${BLU}*${STD} ${NEG}Baixando a versão mais recente do Launcher ATV PRO MOD e Widget...${STD}"
 		wget https://cloud.talesam.org/s/YJ4st8xrbYAr5cD/download/tclhome.apk
 		wget https://cloud.talesam.org/s/5c33tAF8ddyeXm7/download/chronus.apk && clear
 		
 		if [ "$?" -ne 0 ]; then
-			pause " Erro ao baixar os arquivos, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_laucher
+			pause " Erro ao baixar os arquivos, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_launcher
 		else
 			echo ""
-			echo -e " ${BLU}*${STD} ${NEG}Instalando o novo Laucher, aguarde...${STD}" && sleep 1
-			adb install -r tclhome.apk
-			adb install -r chronus.apk
-			#if [ "$(adb install -r tclhome.apk | grep "Success")" = "Success" && "$(adb install -r chronus.apk | grep "Success")" = "Success" ]; then
+			echo -e " ${BLU}*${STD} ${NEG}Instalando o novo Launcher, aguarde...${STD}" && sleep 1
+			fakeroot adb install -r tclhome.apk
+			fakeroot adb install -r chronus.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
-				echo -e " ${GRE}*${STD} ${NEG}Laucher ATV PRO MOD instalado com sucesso!${STD}"
+				echo -e " ${GRE}*${STD} ${NEG}Launcher ATV PRO MOD instalado com sucesso!${STD}"
 				echo ""
-				echo -e " ${BLU}*${STD} ${NEG}Ativando o novo Laucher, aguarde...${STD}" && sleep 1
-				# Desativa o laucher padrão
-				adb shell pm disable-user --user 0 com.google.android.tvlauncher
-				if [ "$(adb shell pm disable-user --user 0 com.google.android.tvlauncher | grep disabled-user | cut -f5 -d " ")" = "disabled-user" ]; then
-					echo "Laucher ATV PRO MOD ativo com sucesso!"
-					echo "Ativando a nova Laucher ATV PRO MOD..." && sleep 2
-					adb shell monkey -p com.tcl.home -c android.intent.category.LAUNCHER 1
+				echo -e " ${BLU}*${STD} ${NEG}Ativando o novo Launcher, aguarde...${STD}" && sleep 1
+				
+				# Desativa o Launcher padrão
+				fakeroot adb shell pm disable-user --user 0 com.google.android.tvlauncher
+				if [ "$(fakeroot adb shell pm disable-user --user 0 com.google.android.tvlauncher | grep disabled-user | cut -f5 -d " ")" = "disabled-user" ]; then
+					echo "Launcher ATV PRO MOD ativo com sucesso!"
+					echo "Ativando a nova Launcher ATV PRO MOD..." && sleep 2
+					fakeroot adb shell monkey -p com.tcl.home -c android.intent.category.LAUNCHER 1
 					if [ "$?" -eq "0" ]; then
 						echo ""
-						echo -e " ${GRE}*${STD} ${NEG}Laucher ATV PRO MOD ativado com sucesso!${STD}"
+						echo -e " ${GRE}*${STD} ${NEG}Launcher ATV PRO MOD ativado com sucesso!${STD}"
 						echo ""
-						echo -e " ${BLU}*${STD} ${NEG}Abrindo Laucher ATV PRO MOD...${STD}" && sleep 1
+						echo -e " ${BLU}*${STD} ${NEG}Abrindo Launcher ATV PRO MOD...${STD}" && sleep 1
 					else
-						pause " Erro ao ativar o Laucher ATV PRO, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+						pause " Erro ao ativar o Launcher ATV PRO, verifique sua conexão. Tecle [Enter] para continuar." ; menu_Launcher
 					fi
 				else
-					pause " Erro ao ativar o Laucher ATV PRO, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+					pause " Erro ao ativar o Launcher ATV PRO, verifique sua conexão. Tecle [Enter] para continuar." ; menu_launcher
 				fi
 				echo ""
 				echo -e " ${BLU}*${STD} ${NEG}Atualizando as permissões...${STD}" && sleep 1
+				
 				# Seta permissão para o widget
-				adb shell appwidget grantbind --package com.tcl.home --user 0
+				fakeroot adb shell appwidget grantbind --package com.tcl.home --user 0
 				if [ "$?" -ne "0" ]; then
-					pause " Erro ao setar permissões, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+					pause " Erro ao setar permissões, verifique sua conexão. Tecle [Enter] para continuar." ; menu_launcher
 				else
 					echo -e " ${GRE}*${STD} ${NEG}Permissões atualizadas com sucesso!${STD}"
 				fi
 			else
-				pause " Erro na instalação.. Tecle [Enter] para continuar." ; menu_laucher
+				pause " Erro na instalação.. Tecle [Enter] para continuar." ; menu_launcher
 			fi
 		fi
 	fi
-	pause " Tecle [Enter] para retornar ao menu." ; menu_laucher
+	pause " Tecle [Enter] para retornar ao menu." ; menu_launcher
 }
 
-# Desativar Laucher ATV Pro TCL Mod + Widget
-desativar_laucher(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.tcl.home)" != "" ]; then
+# Desativar Launcher ATV Pro TCL Mod + Widget
+desativar_launcher(){
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.tcl.home)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Ativando Lauche Padrão...${STD}" && sleep 2
 		echo ""
-		adb shell pm enable com.google.android.tvlauncher
+		fakeroot adb shell pm enable com.google.android.tvlauncher
 		if [ "$?" -eq "0" ]; then
 			echo ""
-			echo -e " ${CIN}*${STD} ${NEG}Desativando Laucher ATV PRO MOD...${STD}" && sleep 2
+			echo -e " ${CIN}*${STD} ${NEG}Desativando Launcher ATV PRO MOD...${STD}" && sleep 2
 			echo ""
-			adb shell pm disable-user --user 0 com.tcl.home
+			fakeroot adb shell pm disable-user --user 0 com.tcl.home
 			if [ "$?" -eq "0" ]; then
 				echo ""
-				echo -e " ${CIN}*${STD} ${NEG}Laucher ATV PRO MOD desativado com sucesso!${STD}" && sleep 1
+				echo -e " ${CIN}*${STD} ${NEG}Launcher ATV PRO MOD desativado com sucesso!${STD}" && sleep 1
 				echo ""
 			else
-				pause " Erro ao desativar o Laucher ATV PRO MOD, verifique sua conexão. Tecle [Enter] para continuar." ; menu_laucher
+				pause " Erro ao desativar o Launcher ATV PRO MOD, verifique sua conexão. Tecle [Enter] para continuar." ; menu_launcher
 			fi
-			adb shell am start -n com.google.android.tvlauncher/.MainActivity
+			fakeroot adb shell am start -n com.google.android.tvlauncher/.MainActivity
+			if [ "$?" -eq "0" ]; then
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Configurado o Launcher padrão da Android TV com sucesso!${STD}"
+				echo ""
+			else
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro abrir o Launcher padrão, verifique sua conexão.${STD}"
+				echo ""
+				pause " Tecle [Enter] para retornar ao menu" ; menu_launcher
+			fi
+		else
+			echo ""
+			echo -e " ${RED}*${STD} ${NEG}Erro ao desativar Launcher ATV PRO MOD.${STD}"
+			echo ""
+			pause " Tecle [Enter] para retornar ao menu" ; menu_launcher
+		fi
+	else
+		echo ""
+		echo -e " ${ROS}*${STD} ${NEG}Launcher ATV PRO MOD ainda não instalado.${STD}"
+		echo ""
+	fi
+	pause " Tecle [Enter] para retornar ao menu" ; menu_launcher
+}
+
+# Instalar GoogleTV launcher
+install_googletv(){
+    echo ""
+    echo -e " ${BLU}*${STD} ${NEG}Aguarde a instalação do GoogleTV Home...${STD}" && sleep 2
+
+    # Baixa o app GoogleTV Home (verificar versão no commit de upload mais recente)
+    echo ""
+    echo -e " ${BLU}*${STD} ${NEG}Baixando o GoogleTV Home...${STD}" && sleep 1
+    wget https://cloud.talesam.org/s/jnkAa3yFPor7Z5e/download/GoogleTV_Home.apk && clear
+
+    if [ "$?" -ne 0 ]; then
+        pause " Erro ao baixar os arquivos, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_googletv
+    else
+
+        # Instala o GoogleTV usando adb
+        echo ""
+        echo -e " ${BLU}*${STD} ${NEG}Instalando GoogleTV Home...${STD}" && sleep 1
+        fakeroot adb install -r GoogleTV_Home.apk
+
+        if [ "$?" -eq "0" ]; then
+            echo ""
+            echo -e " ${GRE}*${STD} ${NEG}Google TV Home instalado com sucesso!${STD}"
+
+            # Ativando o GoogleTV
+            echo ""
+            echo -e " ${BLU}*${STD} ${NEG}Ativando o novo Launcher, aguarde...${STD}" && sleep 1
+            fakeroot adb shell pm enable com.google.android.apps.tv.launcherx
+            if [ "$(fakeroot adb shell pm enable com.google.android.apps.tv.launcherx | grep enable | cut -f5 -d " ")" = "enabled" ]; then
+                echo ""
+                echo -e " ${GRE}*${STD} ${NEG}GoogleTV Home ativado com sucesso!${STD}"
+
+                # Desativa o Launcher padrão
+                echo ""
+                echo -e " ${BLU}*${STD} ${NEG}Desativando launcher padrão...${STD}" && sleep 1
+                fakeroot adb shell pm disable-user --user 0 com.google.android.tvlauncher
+                if [ "$(fakeroot adb shell pm disable-user --user 0 com.google.android.tvlauncher | grep disabled-user | cut -f5 -d " ")" = "disabled-user" ]; then
+                    echo ""
+                    echo -e " ${GRE}*${STD} ${NEG}Launcher padrão desativado com sucesso!${STD}" && sleep 2
+                else
+                    pause " Falha ao desativar o launcher padrão, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_googletv
+                fi
+            else
+                pause " Falha ao ativar o GoogleTV, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_googletv
+            fi
+        else
+	    pause " Erro ao instalar o GoogleTV, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_googletv
+        fi
+    fi
+    pause " Tecle [Enter] para retornar ao menu." ; menu_googletv
+}
+
+# Desativar a GoogleTV Home
+desativar_googletv(){
+
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.google.android.apps.tv.launcherx)" != "" ]; then
+		echo ""
+		echo -e " ${GRE}*${STD} ${NEG}Ativando Launcher Padrão...${STD}" && sleep 2
+		echo ""
+		fakeroot adb shell pm enable com.google.android.tvlauncher
+		if [ "$?" -eq "0" ]; then
+			echo ""
+			echo -e " ${CIN}*${STD} ${NEG}Desativando GoogleTV Home...${STD}" && sleep 2
+			echo ""
+			fakeroot adb shell pm disable-user --user 0 com.google.android.apps.tv.launcherx
+			if [ "$?" -eq "0" ]; then
+				echo ""
+				echo -e " ${CIN}*${STD} ${NEG}GoogleTV Home desativado com sucesso!${STD}" && sleep 1
+				echo ""
+			else
+				pause " Erro ao desativar o GoogleTV Home, verifique sua conexão. Tecle [Enter] para continuar." ; menu_googletv
+			fi
+			fakeroot adb shell am start -n com.google.android.tvlauncher/.MainActivity
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Configurado o Laucher padrão da Android TV com sucesso!${STD}"
@@ -477,32 +591,32 @@ desativar_laucher(){
 				echo ""
 				echo -e " ${RED}*${STD} ${NEG}Erro abrir o Laucher padrão, verifique sua conexão.${STD}"
 				echo ""
-				pause " Tecle [Enter] para retornar ao menu" ; menu_laucher
+				pause " Tecle [Enter] para retornar ao menu" ; menu_googletv
 			fi
 		else
 			echo ""
-			echo -e " ${RED}*${STD} ${NEG}Erro ao desativar Laucher ATV PRO MOD.${STD}"
+			echo -e " ${RED}*${STD} ${NEG}Erro ao desativar GoogleTV Home.${STD}"
 			echo ""
-			pause " Tecle [Enter] para retornar ao menu" ; menu_laucher
+			pause " Tecle [Enter] para retornar ao menu" ; menu_googletv
 		fi
 	else
 		echo ""
-		echo -e " ${ROS}*${STD} ${NEG}Laucher ATV PRO MOD ainda não instalado.${STD}"
+		echo -e " ${ROS}*${STD} ${NEG}GoogleTV Home ainda não instalado.${STD}"
 		echo ""
 	fi
-	pause " Tecle [Enter] para retornar ao menu" ; menu_laucher
+	pause " Tecle [Enter] para retornar ao menu" ; menu_googletv
 }
-
 
 # --- INSTALAR NOVOS APPS - INÍCIO
 
 # Instalar Aptoide TV
 install_aptoidetv(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep cm.aptoidetv.pt)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep cm.aptoidetv.pt)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Aptoide TV já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
+
 		# Baixa o Apdoide TV
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Aptoide TV...${STD}" && sleep 1
@@ -510,11 +624,11 @@ install_aptoidetv(){
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
-			pause " Tecle [Enter] para continuar." ; menu_laucher
+			pause " Tecle [Enter] para continuar." ; menu_launcher
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o Aptoide TV, aguarde...${STD}" && sleep 1
-			adb install -r aptoide.apk
+			fakeroot adb install -r aptoide.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Aptoide TV instalado com sucesso!${STD}"
@@ -529,11 +643,12 @@ install_aptoidetv(){
 
 # Instalar Deezer
 install_deezer(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep deezer.android.tv)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep deezer.android.tv)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Deezer já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
+
 		# Baixa o Deezer
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Deezer...${STD}" && sleep 1
@@ -544,7 +659,7 @@ install_deezer(){
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o Deezer, aguarde...${STD}"
-			adb install -r deezer.apk
+			fakeroot adb install -r deezer.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Deezer instalado com sucesso!${STD}"
@@ -559,11 +674,12 @@ install_deezer(){
 
 # Instalar Spotify
 install_spotify(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.spotify.tv.android)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.spotify.tv.android)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Spotify já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
+
 		# Baixa o Spotify
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Spotify...${STD}" && sleep 1
@@ -574,7 +690,7 @@ install_spotify(){
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o Spotify, aguarde...${STD}"
-			adb install -r spotify.apk
+			fakeroot adb install -r spotify.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Spotify instalado com sucesso!${STD}"
@@ -589,11 +705,12 @@ install_spotify(){
 
 # Instalar TV Bro
 install_tvbro(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.phlox.tvwebbrowser)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.phlox.tvwebbrowser)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}TV Bro já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
+
 		# Baixa o TV Bro
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o TV Bro...${STD}" && sleep 1
@@ -604,7 +721,7 @@ install_tvbro(){
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o TV Bro, aguarde...${STD}"
-			adb install -r tvbro.apk
+			fakeroot adb install -r tvbro.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}TV Bro instalado com sucesso!${STD}"
@@ -619,11 +736,12 @@ install_tvbro(){
 
 # Instalar Smart Youtube Next
 install_stubenext(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.liskovsoft.videomanager)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.liskovsoft.videomanager)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Smart Youtube Next já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
+
 		# Baixa o Smart Youtube Next
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Smart Youtube Next...${STD}" && sleep 1
@@ -634,7 +752,7 @@ install_stubenext(){
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o Smart Youtube Next, aguarde...${STD}"
-			adb install -r stubenext.apk
+			fakeroot adb install -r stubenext.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Smart Youtube instalado com sucesso!${STD}"
@@ -649,22 +767,23 @@ install_stubenext(){
 
 # Instalar Send Files
 install_sendfiles(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.crunhyroll.crunchyroid)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.crunhyroll.crunchyroid)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Send Files já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
+
 		# Baixa o Send Files
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Send Files...${STD}" && sleep 1
-		wget https://cloud.t4l35.host/s/XfnGHSMZeNpnaA6/download/sendfiles.apk && clear
+		wget https://cloud.talesam.org/s/9SEsZTP4sMP2Tse/download/SendFiles.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o Send Files, aguarde...${STD}"
-			adb install -r sendfiles.apk
+			fakeroot adb install -r SendFiles.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Send Files instalado com sucesso!${STD}"
@@ -679,11 +798,12 @@ install_sendfiles(){
 
 # Instalar Youcine
 install_youcine(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.stremio.one)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.stremio.one)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Youcine já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
+
 		# Baixa o Stremio
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Youcine...${STD}" && sleep 1
@@ -694,7 +814,7 @@ install_youcine(){
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o Youcine, aguarde...${STD}"
-			adb install -r youcine.apk
+			fakeroot adb install -r youcine.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Youcine instalado com sucesso!${STD}"
@@ -709,22 +829,23 @@ install_youcine(){
 
 # Instalar X-Plore
 install_xplore(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.lonelycatgames.Xplore)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.lonelycatgames.Xplore)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}X-Plore já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
+
 		# Baixa o X-Plore
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o X-Plore...${STD}" && sleep 1
-		wget https://cloud.talesam.org/s/sEo25D5weiQ47FW/download/xplore.apk && clear
+		wget https://cloud.talesam.org/s/mGk6FkkzfJQ3zFH/download/XPlore.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o X-Plore, aguarde...${STD}"
-			adb install -r Xplore.apk
+			fakeroot adb install -r XPlore.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}X-Plore instalado com sucesso!${STD}"
@@ -737,13 +858,14 @@ install_xplore(){
 	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
 
-# Instalar Setting (Troca Laucher)
+# Instalar Setting (Troca Launcher)
 install_setting(){
-	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep dp.ws.popcorntime)" != "" ]; then
+	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep dp.ws.popcorntime)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Setting já está instalado.${STD}"
 		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
 	else
+
 		# Baixa o Setting
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Setting...${STD}" && sleep 1
@@ -754,7 +876,7 @@ install_setting(){
 		else
 			echo ""
 			echo -e " ${BLU}*${STD} ${NEG}Instalando o Setting, aguarde...${STD}"
-			adb install -r setting.apk
+			fakeroot adb install -r setting.apk
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Setting instalado com sucesso!${STD}"
@@ -766,36 +888,6 @@ install_setting(){
 	fi
 	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
 }
-
-# Instalar Photo Galley
-#install_photogalley(){
-#	if [ "$(adb shell pm list packages -e | cut -f2 -d: | grep com.furnaghan.android.photoscreensaver)" != "" ]; then
-#		echo ""
-#		echo -e " ${GRE}*${STD} ${NEG}Photo Galley já está instalado.${STD}"
-#		pause " Tecle [Enter] para retornar ao menu Instalar Novos Apps" ; menu_install_apps
-#	else
-#		# Baixa o Photo Galley
-#		echo ""
-#		echo -e " ${BLU}*${STD} ${NEG}Baixando o Photo Galley...${STD}" && sleep 1
-#		wget --content-disposition https://cloud.talesam.org/s/ExKbcZKYeXZgimk/download && clear
-#		if [ "$?" -ne 0 ]; then
-#			echo ""
-#			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
-#		else
-#			echo ""
-#			echo -e " ${BLU}*${STD} ${NEG}Instalando o Photo Galley, aguarde...${STD}"
-#			adb install -r photogallery.apk
-#			if [ "$?" -eq "0" ]; then
-#				echo ""
-#				echo -e " ${GRE}*${STD} ${NEG}Photo Galley instalado com sucesso!${STD}"
-#			else
-#				echo ""
-#				echo -e " ${RED}*${STD} ${NEG}Erro na instalação.${STD}"
-#			fi
-#		fi
-#	fi
-#	pause "Tecle [Enter] para retonar ao menu" ; menu_install_apps
-#}
 
 # --- INSTALAR NOVOS APPS - FIM
 
@@ -814,9 +906,10 @@ gravar_tela(){
 	echo ""
 	echo -e " Para parar a gravação tecle ${NEG}[CTRL + C]${STD}"
 	echo ""
+
 	# Testa se o diretório já existe, senão cria
-	CAMINHO="/sdcard/ADB\ Recording"
-	adb shell mkdir -p $CAMINHO
+	CAMINHO="/sdcard/adb\ Recording"
+	fakeroot adb shell mkdir -p $CAMINHO
 	echo -e " ${NEG}O arquivo será gravado em:${STD}"
 	echo -e " ${ROS}$CAMINHO${STD}"
 	echo ""
@@ -826,7 +919,7 @@ gravar_tela(){
 	read REC
 	for i in {000..999}; do
 		echo -e " ${BLU}*${STD} ${NEG}Gravando vídeo $REC-${i}.mp4 ...${STD}"
-		adb shell screenrecord --bit-rate 100000000 --size 1280x720 "$CAMINHO/$REC-${i}.mp4"
+		fakeroot adb shell screenrecord --bit-rate 100000000 --size 1280x720 "$CAMINHO/$REC-${i}.mp4"
 		if [ "$?" -eq "0" ]; then
 			echo ""
 			echo -e " ${GRE}*${STD} ${NEG}Vídeo $REC-${i}.mp4 gravado com sucesso!${STD}"
@@ -848,12 +941,12 @@ menu_principal(){
 		echo ""
 		echo -e " ${CYA}OTMIZAÇÃO TV TCL P8M, S6500 e S5300${STD} - ${YEL}$VER${STD}"
 
-		# Verifica o Status da TV, se está conectada ou não via ADB
+		# Verifica o Status da TV, se está conectada ou não via adb
 		ping -c 1 $IP >/dev/null 2>&1
 		if [ "$?" -ne 0 ]; then
 			echo -e " ${NEG}Status:${STD} ${RED}Desconectado${STD} ${NEG}via adb${STD}"
 		else
-			if [ "$(adb connect $IP | cut -f1 -d" " | grep -e connected -e already)" != "" ]; then
+			if [ "$(fakeroot adb connect $IP | cut -f1 -d" " | grep -e connected -e already)" != "" ]; then
 				echo -e " ${NEG}Status:${STD} ${GRE}Conectado${STD} ${NEG}via adb${STD}"
 			else
 				echo -e " ${NEG}Status:${STD} ${RED}Desconectado${STD} ${NEG}via adb.${STD}"
@@ -873,8 +966,9 @@ menu_principal(){
 		echo -e " ${BLU}2.${STD} ${RED009}Remover apps lixo (S6500)${STD}"
 		echo -e " ${BLU}3.${STD} ${GRY247}Desativar${STD}/${GRE046}Ativar apps${STD}"
 		echo -e " ${BLU}4.${STD} ${BLU039}Launcher ATV Pro TCL Mod + Widget${STD}"
-		echo -e " ${BLU}5.${STD} ${GRE046}Instalar novos apps${STD}"
-		echo -e " ${BLU}6.${STD} ${AMA226}Gravar Tela da TV${STD} ${NEG}*EXPERIMENTAL*${STD}"
+		echo -e " ${BLU}5.${STD} ${BLU039}Launcher GoogleTV Home${STD}"
+		echo -e " ${BLU}6.${STD} ${GRE046}Instalar novos apps${STD}"
+		echo -e " ${BLU}7.${STD} ${AMA226}Gravar Tela da TV${STD} ${NEG}*EXPERIMENTAL*${STD}"
 		echo -e " ${BLU}0.${STD} ${RED}Sair${STD}"
 		echo ""
 		read -p " Digite um número e tecle [Enter]:" option
@@ -882,11 +976,12 @@ menu_principal(){
 			1 ) rm_apps_p8m ;;
 			2 ) rm_apps_S6500 ;;
 			3 ) menu_ativar_desativar ;;
-			4 ) menu_laucher ;;
-			5 ) menu_install_apps ;;
-			6 ) gravar_tela ;;
-			0 ) exit ; adb disconnect $IP >/dev/null ;;
-			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD},${STD} ${ROS}6${STD} ${NEG}ou${STD} ${ROS}0 para Sair${STD}"; 
+			4 ) menu_launcher ;;
+			5 ) menu_googletv ;;
+			6 ) menu_install_apps ;;
+			7 ) gravar_tela ;;
+			0 ) exit ; fakeroot adb disconnect $IP >/dev/null ;;
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD},${STD} ${ROS}6${STD},${STD} ${ROS}7${STD} ${NEG}ou${STD} ${ROS}0 para Sair${STD}"; 
 		esac
 	done
 }
@@ -914,23 +1009,46 @@ menu_ativar_desativar(){
 	done
 }
 
-# Menu Instalar e ativar/desativar Laucher ATV PRO MOD
-menu_laucher(){ 
+# Menu Instalar e ativar/desativar Launcher ATV PRO MOD
+menu_launcher(){ 
 	clear
 	option=0
 	until [ "$option" = "3" ]; do
 		separacao
-		echo -e " ${ROX027}Instalar e Ativar Laucher ATV PRO MOD${STD}"
+		echo -e " ${ROX027}Instalar e Ativar Launcher ATV PRO MOD${STD}"
 		separacao
 		echo ""
 		echo -e " ${BLU}1.${STD} ${GRE046}Instalar e ativar Launcher${STD}"
-		echo -e " ${BLU}2.${STD} ${GRY247}Desativar Laucher${STD}"
+		echo -e " ${BLU}2.${STD} ${GRY247}Desativar Launcher${STD}"
 		echo -e " ${BLU}3.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
 		echo ""
 		read -p " Digite um número:" option
 		case $option in
-			1 ) install_laucher ;;
-			2 ) desativar_laucher ;;
+			1 ) install_launcher ;;
+			2 ) desativar_launcher ;;
+			3 ) menu_principal ;;
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}3${STD}${NEG}";
+		esac
+	done
+}
+
+# Menu Instalar e ativar/desativar Launcher GoogleTV Home
+menu_googletv(){ 
+	clear
+	option=0
+	until [ "$option" = "3" ]; do
+		separacao
+		echo -e " ${ROX027}Instalar a Launcher GoogleTV Home${STD}"
+		separacao
+		echo ""
+		echo -e " ${BLU}1.${STD} ${GRE046}Instalar/atualizar a GoogleTV Home${STD}"
+		echo -e " ${BLU}2.${STD} ${GRY247}Desativar GoogleTV Home${STD}"
+		echo -e " ${BLU}3.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
+		echo ""
+		read -p " Digite um número:" option
+		case $option in
+			1 ) install_googletv ;;
+			2 ) desativar_googletv ;;
 			3 ) menu_principal ;;
 			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}3${STD}${NEG}";
 		esac
@@ -954,8 +1072,7 @@ menu_install_apps(){
 		echo -e " ${BLU}6.${STD} Send Files - v1.2.2"
 		echo -e " ${BLU}7.${STD} Youcine - v1.1.2"
 		echo -e " ${BLU}8.${STD} X-Plore - v4.27.65"
-		echo -e " ${BLU}9.${STD} Setting (Trocar Laucher)"
-		#echo -e " ${BLU}10.${STD} Photo Galley"
+		echo -e " ${BLU}9.${STD} Setting (Trocar Launcher)"
 		echo -e " ${BLU}0.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
 		echo ""
 		read -p " Digite um número:" option
@@ -969,7 +1086,6 @@ menu_install_apps(){
 			7 ) install_youcine ;;
 			8 ) install_xplore ;;
 			9 ) install_setting ;;
-			#10 ) install_photogalley ;;
 			0 ) menu_principal ;;
 			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD}${NEG},${STD} ${ROS}6${STD}${NEG},${STD} ${ROS}7${STD}${NEG},${STD} ${ROS}8${STD}${NEG},${STD} ${ROS}9${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}0 para sair${STD}";
 		esac
@@ -977,8 +1093,7 @@ menu_install_apps(){
 }
 
 # Cria um diretório temporário e joga todos arquivos lá dentro e remove sempre ao entrar no script
-rm -rf .tmp
-mkdir .tmp
-cd .tmp
+rm -rf .tmp && mkdir .tmp && cd .tmp
+
 # Chama o script inicial
 termux
