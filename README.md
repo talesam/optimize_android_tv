@@ -22,4 +22,4 @@ bash ott.sh
 ```
 
 
-![Imagem Script otimizar Android TV (TCL)](https://user-images.githubusercontent.com/981368/164861661-b15ff4b7-b1ba-434c-ab28-9af02ef311e8.png)
+![Imagem Script otimizar Android TV (TCL)](https://user-images.githubusercontent.com/981368/164863021-115d58b0-31a1-4061-acb1-7e697d27eee9.png)
