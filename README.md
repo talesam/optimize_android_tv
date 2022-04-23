@@ -21,5 +21,4 @@ Após o comando acima, para chamar o script novamente basta digitar:
 bash ott.sh
 ```
 
-
-![Imagem Script otimizar Android TV (TCL)](https://user-images.githubusercontent.com/981368/164863021-115d58b0-31a1-4061-acb1-7e697d27eee9.png)
+![Imagem Script otimizar Android TV (TCL)](https://user-images.githubusercontent.com/981368/164873999-f7318e15-7b8e-42fa-b1fd-71ee4505753d.png)
