@@ -76,8 +76,8 @@ termux(){
 		pause " Tecle [Enter] para continuar..." ; conectar_tv
 	else
 		echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script, aguarde...${SDT}" && sleep 1
-		pkg update -y -o Dpkg::Options::=--force-confold > /dev/null
-		pkg install -y android-tools && pkg install -y fakeroot > /dev/null
+		pkg update -y -o Dpkg::Options::=--force-confold
+		pkg install -y android-tools && pkg install -y fakeroot && clear
 		if [ "$?" -eq "0" ]; then
 			echo ""
 			echo -e " ${GRE}*${STD} ${NEG}Instalação conluida com sucesso!${STD}"
