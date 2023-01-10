@@ -966,7 +966,7 @@ menu_ativar_desativar(){
 		echo ""
 		echo -e " ${BLU}1.${STD} ${GRY247}Desativar apps${STD}"
 		echo -e " ${BLU}2.${STD} ${GRE046}Ativar apps${STD}"
-		echo -e " ${BLU}3.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
+		echo -e " ${BLU}0.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
 		echo ""
 		read -p " Digite um número:" option
 		case $option in
@@ -989,7 +989,7 @@ menu_launcher(){
 		echo ""
 		echo -e " ${BLU}1.${STD} ${GRE046}Instalar e ativar Launcher${STD}"
 		echo -e " ${BLU}2.${STD} ${GRY247}Desativar Launcher${STD}"
-		echo -e " ${BLU}3.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
+		echo -e " ${BLU}0.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
 		echo ""
 		read -p " Digite um número:" option
 		case $option in
@@ -1012,7 +1012,7 @@ menu_googletv(){
 		echo ""
 		echo -e " ${BLU}1.${STD} ${GRE046}Instalar/atualizar a GoogleTV Home${STD}"
 		echo -e " ${BLU}2.${STD} ${GRY247}Desativar GoogleTV Home${STD}"
-		echo -e " ${BLU}3.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
+		echo -e " ${BLU}0.${STD} ${ROX063}Retornar ao Menu Principal${STD}"
 		echo ""
 		read -p " Digite um número:" option
 		case $option in

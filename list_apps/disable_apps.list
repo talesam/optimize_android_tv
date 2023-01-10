@@ -37,5 +37,5 @@ com.tcl.showmode|Modo loja. *SEGURO DESATIVAR*.
 com.tcl.assistant|Serve de auxilio para o Google Assistente, porém não é ativo. *SEGURO DESATIVAR*.
 com.tcl.copydatatotv|API para apk da TCL. *SEGURO DESATIVAR*.
 com.tcl.bi|Bi são alguns recursos tipo esticker que acaba rodando em background, sem uso. *SEGURO DESATIVAR*.
-com.android.camera2|Aplicativo de câmera, inútil em uma TV. *SEGURO DESATIVAR*.
+com.android.camera2|Aplicativo de câmera, só é útil se tiver uma webcam. *SEGURO DESATIVAR*.
 
