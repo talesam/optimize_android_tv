@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.4.45"
+VER="v0.5.45"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -61,13 +61,16 @@ termux(){
 	echo -e " ${NEG}Bem vindo(a) ao script OTT (Otimização TV TCL)${STD}"
 	echo ""
 	echo -e " ${NEG}Modelos compatíveis:${STD}"
-	echo -e " ${ROS}RT41 = ${STD}${CYA}ES560${STD}, ${CYA}S6500${STD}, ${CYA}S5300${STD}, ${CYA}S615${STD}"
-	echo -e " ${ROS}RT51 = ${STD}${CYA}P8M${STD}, ${CYA}SK8300${STD}, ${CYA}P615${STD}, ${CYA}P715${STD}, ${CYA}C715${STD}, ${CYA}C815${STD}"
-	echo -e " ${ROS}R51M = ${STD}${CYA}P725${STD}, ${CYA}C725${STD}"
-	echo -e " ${ROS}MT9615 = ${STD}${CYA}C825${STD}"
+	echo -e " ${ROS}Chassi T221T01    = ${STD}${CYA}S615${STD}"
+	echo -e " ${ROS}Chassi R51AT01    = ${STD}${CYA}P635${STD}"
+	echo -e " ${ROS}Chassi RT41       = ${STD}${CYA}ES560${STD}, ${CYA}S6500${STD}, ${CYA}S5300${STD}"
+	echo -e " ${ROS}Chassi RT51       = ${STD}${CYA}A6${STD}, ${CYA}A8${STD}, ${CYA}A10${STD}, ${CYA}C715${STD}, ${CYA}C716${STD}, ${CYA}C717${STD}, ${CYA}C815${STD}, ${CYA}EP640${STD}, ${CYA}EP645${STD}, ${CYA}EP660${STD}, ${CYA}EP685${STD}, ${CYA}EC785${STD}, ${CYA}K61${STD}, ${CYA}P615${STD}, ${CYA}P715${STD}, ${CYA}P717${STD}, ${CYA}P8M/US${STD}, ${CYA}Q800${STD}, ${CYA}X10${STD}, ${CYA}X815${STD}"
+	echo -e " ${ROS}Chassi R51M       = ${STD}${CYA}P725${STD}, ${CYA}C725${STD}"
+	echo -e " ${ROS}Chassi T615T01    = ${STD}${CYA}C825${STD}"
+	echo -e " ${ROS}Chassi T615T01/03 = ${STD}${CYA}C825${STD}, ${CYA}C835${STD}"
 	separacao
 	echo ""
-	pause " Tecle [Enter] para continuar..."
+	pause " Tecle [Enter] para continuar..." && sleep 1 ; clear
 	echo ""
 	echo -e " ${ROX063}Verificando dependências, aguarde...${STD}" && sleep 1
 	if [ -e "/data/data/com.termux/files/usr/bin/adb.bin" ] && [ -e "/data/data/com.termux/files/usr/bin/fakeroot" ] || [ -e "/usr/bin/adb" ]; then
@@ -146,15 +149,16 @@ conectar_tv(){
 	fi
 }
 
-# Remover apps P8M
-rm_apps_p8m(){
+
+# Remover apps Lixo
+rm_apps(){
 	clear
 	OIFS=$IFS
 	IFS=$'\n'
 
 	# Verifica se o arquivo existe
-	if [ -e "rm_apps_p8m.list" ]; then
-		for app_rm in $(cat rm_apps_p8m.list); do
+	if [ -e "rm_apps.list" ]; then
+		for app_rm in $(cat rm_apps.list); do
 			fakeroot adb shell pm uninstall --user 0 $app_rm >/dev/null
 			if [ "$?" -eq "0" ]; then
 				echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
@@ -166,9 +170,9 @@ rm_apps_p8m(){
 
 		# Baixar lista lixo dos apps
 		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista negra de apps...${STD}" && sleep 2
-		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_p8m.list && clear
-		if [ -e "rm_apps_p8m.list" ]; then
-			for app_rm in $(cat rm_apps_p8m.list); do
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/list_apps/rm_apps.list && clear
+		if [ -e "rm_apps.list" ]; then
+			for app_rm in $(cat rm_apps.list); do
 				fakeroot adb shell pm uninstall --user 0 $app_rm >/dev/null
 				if [ "$?" -eq "0" ]; then
 					echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
@@ -187,48 +191,7 @@ rm_apps_p8m(){
 IFS=$OIFS
 }
 
-# Remover apps S6500
-rm_apps_S6500(){
-	clear
-	OIFS=$IFS
-	IFS=$'\n'
-
-	# Verifica se o arquivo existe
-	if [ -e "rm_apps_S6500.list" ]; then
-		for app_rm in $(cat rm_apps_S6500.list); do
-			fakeroot adb shell pm uninstall --user 0 $app_rm >/dev/null
-			if [ "$?" -eq "0" ]; then
-				echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
-			else
-				echo -e " ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
-			fi
-		done
-	else
-
-		# Baixar lista lixo dos apps
-		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista negra de apps...${STD}" && sleep 2
-		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/rm_apps_S6500.list && clear
-		if [ -e "rm_apps_S6500.list" ]; then
-			for app_rm in $(cat rm_apps_S6500.list); do
-				fakeroot adb shell pm uninstall --user 0 $app_rm >/dev/null
-				if [ "$?" -eq "0" ]; then
-					echo -e " ${BLU}*${STD} App ${CYA}$app_rm${STD} ${GRE046}removido com sucesso!${STD}" && sleep 1
-				else
-					echo -e " ${RED}*${STD} App ${CYA}$app_rm${STD} já foi removido ou não existe" && sleep 1
-				fi
-			done
-		else
-			echo ""
-			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar a lista LIXO dos apps. Verifique sua conexão.${STD}"
-			echo ""
-		fi
-	fi
-	echo ""
-	pause " Tecle [Enter] para retornar ao menu principal..." ; menu_principal
-IFS=$OIFS
-}
-
-# Desativar/Ativar Apps - INICIO
+### Desativar/Ativar Apps - INICIO
 COLS=$(tput cols)
 
 ativar() {
@@ -240,8 +203,8 @@ ativar() {
 	apk_disabled="$(fakeroot adb shell pm list packages -d | cut -f2 -d:)"
 
 	# Verifica se o arquivo existe no diretório local
-	if [ -e "apps_disable.list" ]; then
-		for apk_full in $(cat apps_disable.list); do
+	if [ -e "disable_apps.list" ]; then
+		for apk_full in $(cat disable_apps.list); do
 			apk="$(echo "$apk_full" | cut -f1 -d"|")"
 			apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 			if [ "$(echo "$apk_disabled" | grep "$apk")" != "" ]; then
@@ -254,9 +217,9 @@ ativar() {
 		# Baixar lista de apps para serem desativados
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista de apps...${STD}" && sleep 1
-		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/apps_disable.list
-		if [ -e "apps_disable.list" ]; then
-			for apk_full in $(cat apps_disable.list); do
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/list_apps/disable_apps.list
+		if [ -e "disable_apps.list" ]; then
+			for apk_full in $(cat disable_apps.list); do
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
 				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 				if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
@@ -293,8 +256,8 @@ desativar() {
 	apk_disabled="$(fakeroot adb shell pm list packages -d | cut -f2 -d:)"
 
 	# Verifica se o arquivo existe no diretório local
-	if [ -e "apps_disable.list" ]; then
-		for apk_full in $(cat apps_disable.list); do
+	if [ -e "disable_apps.list" ]; then
+		for apk_full in $(cat disable_apps.list); do
 			apk="$(echo "$apk_full" | cut -f1 -d"|")"
 			apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 			if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
@@ -307,9 +270,9 @@ desativar() {
 		# Baixar lista de apps para serem desativados
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista de apps...${STD}" && sleep 1
-		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/apps_disable.list
-		if [ -e "apps_disable.list" ]; then
-			for apk_full in $(cat apps_disable.list); do
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/list_apps/disable_apps.list
+		if [ -e "disable_apps.list" ]; then
+			for apk_full in $(cat disable_apps.list); do
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
 				apk_desc="$(echo "$apk_full" | cut -f2 -d"|")"
 				if [ "$(echo "$apk_disabled" | grep "$apk")" = "" ]; then
@@ -340,7 +303,7 @@ resposta_desativar() {
 linha() {
 	printf '%*s' "$COLS" '' | sed "s/ /_/g"
 }
-# Desativar/Ativar Apps - FIM
+### Desativar/Ativar Apps - FIM
 
 # Instalar e ativar Launcher ATV Pro TCL Mod + Widget
 install_launcher(){
@@ -909,17 +872,17 @@ gravar_tela(){
 	echo -e " ${LAR214}recurso é limitado a 3 minutos de gravação,${STD}"
 	echo -e " ${LAR214}porém após terminar uma gravação outra se${STD}"
 	echo -e " ${LAR214}inicia automaticamnte em outro arquivo com${STD}"
-	echo -e " ${LAR214}mesmo nome, altera apenas o final, por exemplo:${STD}"
-	echo -e " ${LAR214}gravacao-001.mp4, gravacao-002.mp4.${STD}"
+	echo -e " ${LAR214}mesmo nome, alterando apenas o final, por${STD}"
+	echo -e " ${LAR214}exemplo: gravacao-001.mp4, gravacao-002.mp4.${STD}"
 	echo ""
 	echo -e " Para parar a gravação tecle ${NEG}[CTRL + C]${STD}"
 	echo ""
 
 	# Testa se o diretório já existe, senão cria
 	CAMINHO="/sdcard/adb\ Recording"
-	fakeroot adb shell mkdir -p $CAMINHO
+	fakeroot adb shell mkdir -p ${CAMINHO}
 	echo -e " ${NEG}O arquivo será gravado em:${STD}"
-	echo -e " ${ROS}$CAMINHO${STD}"
+	echo -e " ${ROS}${CAMINHO}${STD}"
 	echo ""
 	echo -e " ${ROX063}Digite um nome para o seu arquivo${STD}"
 	echo " e tecle [Enter] para começar a gravar:"
@@ -927,7 +890,7 @@ gravar_tela(){
 	read REC
 	for i in {000..999}; do
 		echo -e " ${BLU}*${STD} ${NEG}Gravando vídeo $REC-${i}.mp4 ...${STD}"
-		fakeroot adb shell screenrecord --bit-rate 100000000 --size 1280x720 "$CAMINHO/$REC-${i}.mp4"
+		fakeroot adb shell screenrecord --bit-rate 100000000 --size 1280x720 "${CAMINHO}/$REC-${i}.mp4"
 		if [ "$?" -eq "0" ]; then
 			echo ""
 			echo -e " ${GRE}*${STD} ${NEG}Vídeo $REC-${i}.mp4 gravado com sucesso!${STD}"
@@ -935,7 +898,7 @@ gravar_tela(){
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao gravar vídeo. Verifique sua conexão.${STD}"
 			echo ""
-			pause "Tecle enter [Enter] para retornar ao menu Principal." ; menu_principal
+			pause "Tecle [Enter] para retornar ao menu Principal." ; menu_principal
 		fi
 	done
 }
@@ -945,7 +908,7 @@ gravar_tela(){
 menu_principal(){
 	clear
 	option=0
-	until [ "$option" = "7" ]; do
+	until [ "$option" = "6" ]; do
 		echo ""
 		echo -e " ${CYA}OTMIZAÇÃO TV TCL${STD} - ${YEL}$VER${STD}"
 
@@ -970,26 +933,24 @@ menu_principal(){
 		echo -e " ${BLU}PIX:${STD} ${ROS}talesam@gmail.com${STD}"
 		echo ""
 		echo ""
-		echo -e " ${BLU}1.${STD} ${RED009}Remover apps lixo (P8M)${STD}"
-		echo -e " ${BLU}2.${STD} ${RED009}Remover apps lixo (S6500)${STD}"
-		echo -e " ${BLU}3.${STD} ${GRY247}Desativar${STD}/${GRE046}Ativar apps${STD}"
-		echo -e " ${BLU}4.${STD} ${BLU039}Launcher ATV Pro TCL Mod + Widget${STD}"
-		echo -e " ${BLU}5.${STD} ${BLU039}Launcher GoogleTV Home${STD}"
-		echo -e " ${BLU}6.${STD} ${GRE046}Instalar novos apps${STD}"
-		echo -e " ${BLU}7.${STD} ${AMA226}Gravar Tela da TV${STD} ${NEG}*EXPERIMENTAL*${STD}"
+		echo -e " ${BLU}1.${STD} ${RED009}Remover apps lixo${STD}"
+		echo -e " ${BLU}2.${STD} ${GRY247}Desativar${STD}/${GRE046}Ativar apps${STD}"
+		echo -e " ${BLU}3.${STD} ${BLU039}Launcher ATV Pro TCL Mod + Widget${STD}"
+		echo -e " ${BLU}4.${STD} ${BLU039}Launcher GoogleTV Home${STD}"
+		echo -e " ${BLU}5.${STD} ${GRE046}Instalar novos apps${STD}"
+		echo -e " ${BLU}6.${STD} ${AMA226}Gravar Tela da TV${STD} ${NEG}*EXPERIMENTAL*${STD}"
 		echo -e " ${BLU}0.${STD} ${RED}Sair${STD}"
 		echo ""
 		read -p " Digite um número e tecle [Enter]:" option
 		case "$option" in
-			1 ) rm_apps_p8m ;;
-			2 ) rm_apps_S6500 ;;
-			3 ) menu_ativar_desativar ;;
-			4 ) menu_launcher ;;
-			5 ) menu_googletv ;;
-			6 ) menu_install_apps ;;
-			7 ) gravar_tela ;;
+			1 ) rm_apps ;;
+			2 ) menu_ativar_desativar ;;
+			3 ) menu_launcher ;;
+			4 ) menu_googletv ;;
+			5 ) menu_install_apps ;;
+			6 ) gravar_tela ;;
 			0 ) exit ; fakeroot adb disconnect $IP >/dev/null ;;
-			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD},${STD} ${ROS}6${STD},${STD} ${ROS}7${STD} ${NEG}ou${STD} ${ROS}0 para Sair${STD}"; 
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${ROS}3${STD}${NEG},${STD} ${ROS}4${STD}${NEG},${STD} ${ROS}5${STD},${STD} ${ROS}6${STD} ${NEG}ou${STD} ${ROS}0 para Sair${STD}"; 
 		esac
 	done
 }
@@ -1011,8 +972,8 @@ menu_ativar_desativar(){
 		case $option in
 			1 ) desativar ;;
 			2 ) ativar ;;
-			3 ) menu_principal ;;
-			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}3${STD}${NEG}";
+			0 ) menu_principal ;;
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}0${STD}${NEG}";
 		esac
 	done
 }
@@ -1034,8 +995,8 @@ menu_launcher(){
 		case $option in
 			1 ) install_launcher ;;
 			2 ) desativar_launcher ;;
-			3 ) menu_principal ;;
-			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}3${STD}${NEG}";
+			0 ) menu_principal ;;
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}0${STD}${NEG}";
 		esac
 	done
 }
@@ -1057,8 +1018,8 @@ menu_googletv(){
 		case $option in
 			1 ) install_googletv ;;
 			2 ) desativar_googletv ;;
-			3 ) menu_principal ;;
-			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}3${STD}${NEG}";
+			0 ) menu_principal ;;
+			* ) clear; echo -e " ${NEG}Por favor escolha${STD} ${ROS}1${STD}${NEG},${STD} ${ROS}2${STD}${NEG},${STD} ${NEG}ou${STD} ${ROS}0${STD}${NEG}";
 		esac
 	done
 }
@@ -1100,7 +1061,7 @@ menu_install_apps(){
 	done
 }
 
-# Cria um diretório temporário e joga todos arquivos lá dentro e remove sempre ao entrar no script
+# Cria um diretório temporário e joga todos arquivos lá dentro. Remove sempre ao entrar no script
 rm -rf .tmp && mkdir .tmp && cd .tmp
 
 # Chama o script inicial
