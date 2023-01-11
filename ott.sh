@@ -5,9 +5,6 @@
 # https://developer.android.com/studio/command-line/adb
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
-# Versão do script
-VER="v0.5.46"
-
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
 
@@ -41,6 +38,20 @@ STD='\e[m'			# Fechamento de cor
 
 # --- Início Funções ---
 
+# Versão do script
+source .ver
+VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/.ver)"
+
+versao(){
+	if [ "${VER_ON}" -gt "${VER}" ]; then
+		VER=$VER_ON
+		echo "Nova versão: v$VER, atualizando o script, aguarde..." && sleep 1
+		curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott.sh -o ott.sh ; bash ott.sh
+	else
+		echo "Script atualizado, carregando o sistema..." && sleep 1
+	fi
+}
+
 # Separação com cor
 separacao(){
 	for i in {16..21} {21..16} ; do
@@ -73,7 +84,7 @@ termux(){
 	pause " Tecle [Enter] para continuar..." && sleep 1 ; clear
 	echo ""
 	echo -e " ${ROX063}Verificando dependências, aguarde...${STD}" && sleep 1
-	if [ -e "/data/data/com.termux/files/usr/bin/adb.bin" ] && [ -e "/data/data/com.termux/files/usr/bin/fakeroot" ] || [ -e "/usr/bin/adb" ]; then
+	if [ -e "/data/data/com.termux/files/usr/bin/adb" ] && [ -e "/data/data/com.termux/files/usr/bin/fakeroot" ] && [ -e "/data/data/com.termux/files/usr/bin/tput" ] && [ -e "/data/data/com.termux/files/usr/bin/wget" ] || [ -e "/usr/bin/adb" ] && [ -e "/usr/bin/wget" ]; then
 		echo -e " ${GRE046}Dependencias encontradas, conecte-se na TV.${STD}"
 		echo ""
 		pause " Tecle [Enter] para continuar..." ; conectar_tv
