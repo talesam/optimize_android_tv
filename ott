@@ -53,7 +53,7 @@ versao(){
 		curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott -o new_ott
 			if [ "$?" -eq "0" ]; then
 				echo ""
-				echo -e " ${GRE}*${STD} ${NEG}Atualizado com sucesso!" && slepp 1
+				echo -e " ${GRE}*${STD} ${NEG}Atualizado com sucesso!" && sleep 1
 				mv new_ott ott
 				echo -e " ${GRE}*${STD} ${NEG}Carregando o sistema...${STD}" && sleep 3
 				./ott
