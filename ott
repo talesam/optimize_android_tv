@@ -49,11 +49,11 @@ versao(){
 		VER=$VER_ON
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Nova versão: v$VER, atualizando o script, aguarde...${STD}" && sleep 1
-		curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott.sh -o ott.sh
+		curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott -o ott
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Atualizado com sucesso!\n Carregando o sistema em 3 segundos...${STD}" && sleep 3
-				bash ott.sh
+				bash ott
 			else
 				echo ""
 				echo -e " ${RED}*${STD} ${NEG}Erro ao atualizar.\n Verifique sua conexão e tente novamente.${STD}" ; exit 0
@@ -96,22 +96,42 @@ termux(){
 	pause " Tecle [Enter] para continuar..." && sleep 1 ; clear
 	echo ""
 	echo -e " ${ROX063}Verificando dependências, aguarde...${STD}" && sleep 1
-	if [ -e "/data/data/com.termux/files/usr/bin/adb" ] && [ -e "/data/data/com.termux/files/usr/bin/fakeroot" ] && [ -e "/data/data/com.termux/files/usr/bin/tput" ] && [ -e "/data/data/com.termux/files/usr/bin/wget" ] || [ -e "/usr/bin/adb" ] && [ -e "/usr/bin/wget" ]; then
-		echo -e " ${GRE046}Dependencias encontradas, conecte-se na TV.${STD}"
-		echo ""
-		pause " Tecle [Enter] para continuar..." ; conectar_tv
-	else
-		echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script, aguarde...${SDT}" && sleep 1
-		pkg update -y -o Dpkg::Options::=--force-confold
-		pkg install -y wget && pkg install -y ncurses-utils && pkg install -y android-tools && pkg install -y fakeroot && clear
-		if [ "$?" -eq "0" ]; then
+	
+	#Testa se possui as dependẽncias para rodar o script
+	if [[ "$OSTYPE" == "linux-gnu" ]]; then
+		echo -e " ${NEG}Você está executando este scrit no${STD} ${ROS}Linux${STD}"
+		
+		# Testa se existem os arquivos adb e wget no Linux
+		if [ -e "/usr/bin/adb" ] && [ -e "/usr/bin/wget" ]; then
+			echo -e " ${GRE046}Dependencias encontradas, conecte-se na TV.${STD}"
 			echo ""
-			echo -e " ${GRE}*${STD} ${NEG}Instalação conluida com sucesso!${STD}"
-			echo ""
-			pause " Tecle [Enter] para se conectar a TV..." ; conectar_tv
+			pause " Tecle [Enter] para continuar..." ; conectar_tv
 		else
+			echo -e " ${ROX071}Dependencias faltando.\n Instale o adb e wget na sua distro Linux e rode o comando novamente.${STD}"
+			ecit 0
+		fi
+		
+	elif [[ "$OSTYPE" == "linux-android" ]]; then
+		echo -e " ${NEG}Você está executando este scrit no${STD} ${ROS}Termux${STD}"
+		
+		# Testa se existem os arquivos adb, fakeroot, tput e wget no termux
+		if [ -e "/data/data/com.termux/files/usr/bin/adb" ] && [ -e "/data/data/com.termux/files/usr/bin/fakeroot" ] && [ -e "/data/data/com.termux/files/usr/bin/tput" ] && [ -e "/data/data/com.termux/files/usr/bin/wget" ]; then
+			echo -e " ${GRE046}Dependencias encontradas, conecte-se na TV.${STD}"
 			echo ""
-			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar e instalar as dependências.\n Verifique sua conexão e tente novamente.${STD}" ; exit 0
+			pause " Tecle [Enter] para continuar..." ; conectar_tv
+		else
+			echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script, aguarde...${SDT}" && sleep 1
+			pkg update -y -o Dpkg::Options::=--force-confold
+			pkg install -y wget && pkg install -y ncurses-utils && pkg install -y android-tools && pkg install -y fakeroot && clear
+			if [ "$?" -eq "0" ]; then
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Instalação conluida com sucesso!${STD}"
+				echo ""
+				pause " Tecle [Enter] para se conectar a TV..." ; conectar_tv
+			else
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro ao baixar e instalar as dependências.\n Verifique sua conexão e tente novamente.${STD}" ; exit 0
+			fi
 		fi
 	fi
 }
