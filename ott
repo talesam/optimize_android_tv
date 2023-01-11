@@ -39,7 +39,7 @@ STD='\e[m'			# Fechamento de cor
 # --- Início Funções ---
 
 # Versão do script
-VER="0.5.48"
+VER="0.5.49"
 
 VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/.ver)"
 
