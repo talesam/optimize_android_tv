@@ -39,7 +39,7 @@ STD='\e[m'			# Fechamento de cor
 # --- Início Funções ---
 
 # Versão do script
-VER="0.5.46"
+VER="0.5.47"
 
 VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/.ver)"
 
@@ -48,7 +48,8 @@ versao(){
 	if [ "${VER_ON}" \> "${VER}" ]; then
 		VER=$VER_ON
 		echo ""
-		echo -e " ${BLU}*${STD} ${NEG}Nova versão: v$VER, atualizando o script, aguarde...${STD}" && sleep 1
+		echo -e " ${BLU}*${STD} ${NEG}Nova versão:${STD}${YEL} v$VER${STD}"
+		echo -e " ${BLU}*${STD}Atualizando o script, aguarde...${STD}" && sleep 1
 		curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott -o ott
 			if [ "$?" -eq "0" ]; then
 				echo ""
