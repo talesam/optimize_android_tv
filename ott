@@ -50,18 +50,20 @@ versao(){
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Nova versão:${STD}${YEL} v$VER${STD}"
 		echo -e " ${BLU}*${STD}Atualizando o script, aguarde...${STD}" && sleep 1
-		curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott -o ott
+		curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott -o new_ott
 			if [ "$?" -eq "0" ]; then
 				echo ""
-				echo -e " ${GRE}*${STD} ${NEG}Atualizado com sucesso!\n Carregando o sistema em 3 segundos...${STD}" && sleep 3
-				bash ott
+				echo -e " ${GRE}*${STD} ${NEG}Atualizado com sucesso!" && slepp 1
+				mv new_ott ott
+				echo -e " ${GRE}*${STD} ${NEG}Carregando o sistema...${STD}" && sleep 3
+				./ott
 			else
 				echo ""
 				echo -e " ${RED}*${STD} ${NEG}Erro ao atualizar.\n Verifique sua conexão e tente novamente.${STD}" ; exit 0
 			fi
 	else
 		echo ""
-		echo -e " ${GRE}*${STD} ${NEG}Script atualizado, carregando o sistema em 3 segundos...${STD}" && sleep 3
+		echo -e " ${GRE}*${STD} ${NEG}Script atualizado, carregando o sistema...${STD}" && sleep 3
 	fi
 }
 
