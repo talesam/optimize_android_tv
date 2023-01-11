@@ -44,12 +44,21 @@ read -r VER < .ver
 VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/.ver)"
 
 versao(){
+	clear
 	if [ "${VER_ON}" \> "${VER}" ]; then
 		VER=$VER_ON
-		echo "Nova versão: v$VER, atualizando o script, aguarde..." && sleep 1
-		curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott.sh -o ott.sh ; bash ott.sh
+		echo -e " ${BLU}*${STD} ${NEG}Nova versão: v$VER, atualizando o script, aguarde...${STD}" && sleep 1
+		curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott.sh -o ott.sh
+			if [ "$?" -eq "0" ]; then
+				echo ""
+				echo -e " ${GRE}*${STD} ${NEG}Atualizado com sucesso!\n Carregando o sistema em 3 segundos...${STD}" && sleep 3
+				bash ott.sh
+			else
+				echo ""
+				echo -e " ${RED}*${STD} ${NEG}Erro ao atualizar.\n Verifique sua conexão e tente novamente.${STD}" ; exit 0
+			fi
 	else
-		echo "Script atualizado, carregando o sistema..." && sleep 1
+		echo -e " ${GRE}*${STD} ${NEG}Script atualizado, carregando o sistema em 3 segundos...${STD}" && sleep 3
 	fi
 }
 
