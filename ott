@@ -41,7 +41,7 @@ STD='\e[m'			# Fechamento de cor
 # Versão do script
 VER="0.5.49"
 
-VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott | grep VER=\" | sed 's|VER="||g;s|"||g')"
+VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott | grep -m1 VER=\" | sed 's|VER="||g;s|"||g')"
 
 versao(){
 	clear
