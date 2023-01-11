@@ -6,7 +6,7 @@
 # https://adbshell.com/commands/adb-shell-pm-list-packages
 
 # Versão do script
-VER="v0.5.45"
+VER="v0.5.46"
 
 # Definição de Cores
 # Tabela de cores: https://misc.flogisoft.com/_media/bash/colors_format/256_colors_fg.png
@@ -80,7 +80,7 @@ termux(){
 	else
 		echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script, aguarde...${SDT}" && sleep 1
 		pkg update -y -o Dpkg::Options::=--force-confold
-		pkg install -y wget && pkg install -y android-tools && pkg install -y fakeroot && clear
+		pkg install -y wget && pkg install -y ncurses-utils && pkg install -y android-tools && pkg install -y fakeroot && clear
 		if [ "$?" -eq "0" ]; then
 			echo ""
 			echo -e " ${GRE}*${STD} ${NEG}Instalação conluida com sucesso!${STD}"
@@ -297,7 +297,7 @@ pergunta_desativar() {
 }
 
 resposta_desativar() {
-	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${LAR208}"Informação sobre o pacote${STD} ${CYA044}${apk}${STD}";fakeroot adb shell pm disable-user --user 0 ${apk};}
+	[[ "$resposta" =~ ^([Ss])$ ]] && { echo -e ""${LAR208}"Informação sobre o pacote${STD} ${CYA044}${apk}${STD}";fakeroot adb shell pm disable-user --user 0 ${apk} >/dev/null 2>&1;}
 }
 
 linha() {
