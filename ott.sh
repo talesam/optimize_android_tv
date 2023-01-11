@@ -39,11 +39,12 @@ STD='\e[m'			# Fechamento de cor
 # --- Início Funções ---
 
 # Versão do script
-source .ver
+read -r VER < .ver
+
 VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/.ver)"
 
 versao(){
-	if [ "${VER_ON}" -gt "${VER}" ]; then
+	if [ "${VER_ON}" \> "${VER}" ]; then
 		VER=$VER_ON
 		echo "Nova versão: v$VER, atualizando o script, aguarde..." && sleep 1
 		curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott.sh -o ott.sh ; bash ott.sh
@@ -1074,6 +1075,9 @@ menu_install_apps(){
 
 # Cria um diretório temporário e joga todos arquivos lá dentro. Remove sempre ao entrar no script
 rm -rf .tmp && mkdir .tmp && cd .tmp
+
+# Verifica a versão do app
+versao
 
 # Chama o script inicial
 termux
