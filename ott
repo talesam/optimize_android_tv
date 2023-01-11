@@ -54,7 +54,7 @@ versao(){
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Atualizado com sucesso!" && sleep 1
-				mv -f .tmp/new_ott ott && chmod +x ott
+				cd .. && mv -f .tmp/new_ott ott && chmod +x ott
 				echo -e " ${GRE}*${STD} ${NEG}Carregando o sistema...${STD}" && sleep 3
 				./ott
 				exit
