@@ -41,7 +41,7 @@ STD='\e[m'			# Fechamento de cor
 # Versão do script
 VER="0.5.49"
 
-VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/.ver)"
+VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott | grep VER=\" | cut -f2 -d\")"
 
 versao(){
 	clear
@@ -54,9 +54,10 @@ versao(){
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Atualizado com sucesso!" && sleep 1
-				mv new_ott ott
+				mv -f .tmp/new_ott ott && chmod +x ott
 				echo -e " ${GRE}*${STD} ${NEG}Carregando o sistema...${STD}" && sleep 3
 				./ott
+				exit
 			else
 				echo ""
 				echo -e " ${RED}*${STD} ${NEG}Erro ao atualizar.\n Verifique sua conexão e tente novamente.${STD}" ; exit 0
