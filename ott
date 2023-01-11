@@ -218,7 +218,7 @@ rm_apps(){
 
 		# Baixar lista lixo dos apps
 		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista negra de apps...${STD}" && sleep 2
-		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/list_apps/rm_apps.list && clear
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/list_apps/rm_apps.list >/dev/null 2>&1 && clear
 		if [ -e "rm_apps.list" ]; then
 			for app_rm in $(cat rm_apps.list); do
 				fakeroot adb shell pm uninstall --user 0 $app_rm >/dev/null
@@ -265,7 +265,7 @@ ativar() {
 		# Baixar lista de apps para serem desativados
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista de apps...${STD}" && sleep 1
-		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/list_apps/disable_apps.list
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/list_apps/disable_apps.list >/dev/null 2>&1
 		if [ -e "disable_apps.list" ]; then
 			for apk_full in $(cat disable_apps.list); do
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
@@ -318,7 +318,7 @@ desativar() {
 		# Baixar lista de apps para serem desativados
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Aguarde, baixando lista de apps...${STD}" && sleep 1
-		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/list_apps/disable_apps.list
+		wget https://raw.githubusercontent.com/talesam/optimize_android_tv/master/list_apps/disable_apps.list >/dev/null 2>&1
 		if [ -e "disable_apps.list" ]; then
 			for apk_full in $(cat disable_apps.list); do
 				apk="$(echo "$apk_full" | cut -f1 -d"|")"
