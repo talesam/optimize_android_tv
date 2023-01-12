@@ -39,7 +39,7 @@ STD='\e[m'			# Fechamento de cor
 # --- Início Funções ---
 
 # Versão do script
-VER="0.5.49"
+VER="0.5.50"
 
 VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott | grep -m1 VER=\" | sed 's|VER="||g;s|"||g')"
 
@@ -104,7 +104,9 @@ termux(){
 	
 	#Testa se possui as dependẽncias para rodar o script
 	if [[ "$OSTYPE" == "linux-gnu" ]]; then
+		echo ""
 		echo -e " ${NEG}Você está executando este scrit no${STD} ${ROS}Linux${STD}"
+		echo ""
 		
 		# Testa se existem os arquivos adb e wget no Linux
 		if [ -e "/usr/bin/adb" ] && [ -e "/usr/bin/wget" ]; then
@@ -117,7 +119,9 @@ termux(){
 		fi
 		
 	elif [[ "$OSTYPE" == "linux-android" ]]; then
+		echo ""
 		echo -e " ${NEG}Você está executando este scrit no${STD} ${ROS}Termux${STD}"
+		echo ""
 		
 		# Testa se existem os arquivos adb, fakeroot, tput e wget no termux
 		if [ -e "/data/data/com.termux/files/usr/bin/adb" ] && [ -e "/data/data/com.termux/files/usr/bin/fakeroot" ] && [ -e "/data/data/com.termux/files/usr/bin/tput" ] && [ -e "/data/data/com.termux/files/usr/bin/wget" ]; then
@@ -355,7 +359,7 @@ linha() {
 
 # Instalar e ativar Launcher ATV Pro TCL Mod + Widget
 install_launcher(){
-
+	clear
 	# Remove versão do ATV PRO
 	if [ "$(fakeroot adb shell pm list packages -u | cut -f2 -d: | grep ca.dstudio.atvlauncher.pro)" != "" ]; then
 		echo ""
@@ -488,6 +492,7 @@ install_launcher(){
 
 # Desativar Launcher ATV Pro TCL Mod + Widget
 desativar_launcher(){
+	clear
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.tcl.home)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Ativando Lauche Padrão...${STD}" && sleep 2
@@ -532,6 +537,7 @@ desativar_launcher(){
 
 # Instalar GoogleTV launcher
 install_googletv(){
+	clear
     echo ""
     echo -e " ${BLU}*${STD} ${NEG}Aguarde a instalação do GoogleTV Home...${STD}" && sleep 2
 
@@ -583,6 +589,7 @@ install_googletv(){
 
 # Desativar a GoogleTV Home
 desativar_googletv(){
+	clear
 
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.google.android.apps.tv.launcherx)" != "" ]; then
 		echo ""
@@ -630,6 +637,7 @@ desativar_googletv(){
 
 # Instalar Aptoide TV
 install_aptoidetv(){
+	clear
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep cm.aptoidetv.pt)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Aptoide TV já está instalado.${STD}"
@@ -662,6 +670,7 @@ install_aptoidetv(){
 
 # Instalar Deezer
 install_deezer(){
+	clear
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep deezer.android.tv)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Deezer já está instalado.${STD}"
@@ -693,6 +702,7 @@ install_deezer(){
 
 # Instalar Spotify
 install_spotify(){
+	clear
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.spotify.tv.android)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Spotify já está instalado.${STD}"
@@ -724,6 +734,7 @@ install_spotify(){
 
 # Instalar TV Bro
 install_tvbro(){
+	clear
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.phlox.tvwebbrowser)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}TV Bro já está instalado.${STD}"
@@ -755,6 +766,7 @@ install_tvbro(){
 
 # Instalar Smart Youtube Next
 install_stubenext(){
+	clear
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.liskovsoft.videomanager)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Smart Youtube Next já está instalado.${STD}"
@@ -786,6 +798,7 @@ install_stubenext(){
 
 # Instalar Send Files
 install_sendfiles(){
+	clear
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.crunhyroll.crunchyroid)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Send Files já está instalado.${STD}"
@@ -817,6 +830,7 @@ install_sendfiles(){
 
 # Instalar Youcine
 install_youcine(){
+	clear
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.stremio.one)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Youcine já está instalado.${STD}"
@@ -848,6 +862,7 @@ install_youcine(){
 
 # Instalar X-Plore
 install_xplore(){
+	clear
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep com.lonelycatgames.Xplore)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}X-Plore já está instalado.${STD}"
@@ -879,6 +894,7 @@ install_xplore(){
 
 # Instalar Setting (Troca Launcher)
 install_setting(){
+	clear
 	if [ "$(fakeroot adb shell pm list packages -e | cut -f2 -d: | grep dp.ws.popcorntime)" != "" ]; then
 		echo ""
 		echo -e " ${GRE}*${STD} ${NEG}Setting já está instalado.${STD}"
