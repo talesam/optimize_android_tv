@@ -39,7 +39,7 @@ STD='\e[m'			# Fechamento de cor
 # --- Início Funções ---
 
 # Versão do script
-VER="0.5.50"
+VER="0.5.51"
 
 VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott | grep -m1 VER=\" | sed 's|VER="||g;s|"||g')"
 
@@ -130,7 +130,16 @@ termux(){
 			pause " Tecle [Enter] para continuar..." ; conectar_tv
 		else
 			echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script, aguarde...${SDT}" && sleep 1
-			pkg update -y -o Dpkg::Options::=--force-confold
+			
+			# Configura o repositório padrão e testa se já existe
+			repo="$HOME/.termux/termux.properties"
+			if ! grep -q "apt.default_repo=stable" "$repo"; then
+				echo "apt.default_repo=stable" >> "$repo"
+			fi
+			
+			# Atualiza o repositório e todo o sistema
+			apt update -y >/dev/null 2>&1 &&
+			apt upgrade -y -o Dpkg::Options::=--force-confold >/dev/null 2>&1
 			pkg install -y wget && pkg install -y ncurses-utils && pkg install -y android-tools && pkg install -y fakeroot && clear
 			if [ "$?" -eq "0" ]; then
 				echo ""
