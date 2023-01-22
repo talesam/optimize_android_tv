@@ -39,7 +39,7 @@ STD='\e[m'			# Fechamento de cor
 # --- Início Funções ---
 
 # Versão do script
-VER="0.5.51"
+VER="0.5.52"
 
 VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott | grep -m1 VER=\" | sed 's|VER="||g;s|"||g')"
 
@@ -129,7 +129,7 @@ termux(){
 			echo ""
 			pause " Tecle [Enter] para continuar..." ; conectar_tv
 		else
-			echo -e " ${BLU}*${STD} ${NEG}Baixando dependências para utilizar o script, aguarde...${SDT}" && sleep 1
+			echo -e " ${BLU}*${STD} ${NEG}Baixando dependências, aguarde...${SDT}" && sleep 1
 			
 			# Configura o repositório padrão e testa se já existe
 			repo="$HOME/.termux/termux.properties"
@@ -140,7 +140,12 @@ termux(){
 			# Atualiza o repositório e todo o sistema
 			apt update -y >/dev/null 2>&1 &&
 			apt upgrade -y -o Dpkg::Options::=--force-confold >/dev/null 2>&1
-			pkg install -y wget && pkg install -y ncurses-utils && pkg install -y android-tools && pkg install -y fakeroot && clear
+			
+			# Instala dependencias
+			pkg install -y wget >/dev/null 2>&1 && 
+			pkg install -y ncurses-utils >/dev/null 2>&1 && 
+			pkg install -y android-tools >/dev/null 2>&1 && 
+			pkg install -y fakeroot >/dev/null 2>&1
 			if [ "$?" -eq "0" ]; then
 				echo ""
 				echo -e " ${GRE}*${STD} ${NEG}Instalação conluida com sucesso!${STD}"
