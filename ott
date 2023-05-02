@@ -39,7 +39,7 @@ STD='\e[m'			# Fechamento de cor
 # --- Início Funções ---
 
 # Versão do script
-VER="0.5.52"
+VER="0.5.53"
 
 VER_ON="$(curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott | grep -m1 VER=\" | sed 's|VER="||g;s|"||g')"
 
@@ -453,8 +453,8 @@ install_launcher(){
 		# Baixa o Launcher ATV PRO modificado e o Widget
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando a versão mais recente do Launcher ATV PRO MOD e Widget...${STD}"
-		wget https://cloud.talesam.org/s/YJ4st8xrbYAr5cD/download/tclhome.apk
-		wget https://cloud.talesam.org/s/5c33tAF8ddyeXm7/download/chronus.apk && clear
+		wget https://cloud.talesam.org/s/sPykjECkWRjSNya/download/tclhome.apk
+		wget https://cloud.talesam.org/s/wsqY5QrdkcXHd4m/download/chronus.apk && clear
 		
 		if [ "$?" -ne 0 ]; then
 			pause " Erro ao baixar os arquivos, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_launcher
@@ -558,7 +558,7 @@ install_googletv(){
     # Baixa o app GoogleTV Home (verificar versão no commit de upload mais recente)
     echo ""
     echo -e " ${BLU}*${STD} ${NEG}Baixando o GoogleTV Home...${STD}" && sleep 1
-    wget https://cloud.talesam.org/s/jnkAa3yFPor7Z5e/download/GoogleTV_Home.apk && clear
+    wget https://cloud.talesam.org/s/2SLPBmLdEwgz9iB/download/GoogleTV_Home.apk && clear
 
     if [ "$?" -ne 0 ]; then
         pause " Erro ao baixar os arquivos, verifique a sua conexão. [Enter] para retornar ao menu" ; menu_googletv
@@ -661,7 +661,7 @@ install_aptoidetv(){
 		# Baixa o Apdoide TV
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Aptoide TV...${STD}" && sleep 1
-		wget https://cloud.talesam.org/s/76ZzGdWMGroaSaz/download/aptoide.apk && clear
+		wget https://cloud.talesam.org/s/SM584MFeEqsTZJw/download/aptoide.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -758,7 +758,7 @@ install_tvbro(){
 		# Baixa o TV Bro
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o TV Bro...${STD}" && sleep 1
-		wget https://cloud.talesam.org/s/WBBoBmTiLcJ2obr/download/tvbro.apk && clear
+		wget https://cloud.talesam.org/s/36GRxq5WeAcqbNe/download/tvbro.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -790,7 +790,7 @@ install_stubenext(){
 		# Baixa o Smart Youtube Next
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Smart Youtube Next...${STD}" && sleep 1
-		wget https://cloud.talesam.org/s/qR3nk53f9Zpgaxo/download/stubenext.apk && clear
+		wget https://cloud.talesam.org/s/jrsL9ZkfsCTF7Rk/download/stubenext.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -822,7 +822,7 @@ install_sendfiles(){
 		# Baixa o Send Files
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Send Files...${STD}" && sleep 1
-		wget https://cloud.talesam.org/s/9SEsZTP4sMP2Tse/download/SendFiles.apk && clear
+		wget https://cloud.talesam.org/s/azC8StQbBAepTPG/download/SendFiles.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -854,7 +854,7 @@ install_youcine(){
 		# Baixa o Stremio
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Youcine...${STD}" && sleep 1
-		wget https://cloud.talesam.org/s/Jif8ccwfAsQe9Ps/download/youcine.apk && clear
+		wget https://cloud.talesam.org/s/aL4s3eHFQKMeGfb/download/youcine.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -886,7 +886,7 @@ install_xplore(){
 		# Baixa o X-Plore
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o X-Plore...${STD}" && sleep 1
-		wget https://cloud.talesam.org/s/mGk6FkkzfJQ3zFH/download/XPlore.apk && clear
+		wget https://cloud.talesam.org/s/oXHT23tYpBcdrYG/download/XPlore.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
@@ -918,7 +918,7 @@ install_setting(){
 		# Baixa o Setting
 		echo ""
 		echo -e " ${BLU}*${STD} ${NEG}Baixando o Setting...${STD}" && sleep 1
-		wget https://cloud.talesam.org/s/ZDX9nRGyoYmGrz9/download/setting.apk && clear
+		wget https://cloud.talesam.org/s/9YcopayZNTiNFCd/download/setting.apk && clear
 		if [ "$?" -ne 0 ]; then
 			echo ""
 			echo -e " ${RED}*${STD} ${NEG}Erro ao baixar o arquivo. Verifique sua conexão ou tente mais tarde.${STD}"
