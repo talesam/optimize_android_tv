@@ -32,13 +32,13 @@
 package OTT;
 
 import java.util.Scanner;
-import java.io.InputStream;
+import java.io.DataInputStream;
 import java.lang.reflect.Array;
 import OTT.Methods;
 
 public class Methods
 {
-  public String errmut;
+  public String errmut = "";
 
   public boolean cmdStatus(String[] cmd, boolean print)
   {
@@ -49,10 +49,10 @@ public class Methods
       proc.waitFor();
       if(proc.exitValue() != 0)
       {
-        InputStream procerr = proc.getErrorStream();
+        DataInputStream procerr = new DataInputStream(proc.getErrorStream());
         Object err = Array.newInstance(byte.class, procerr.available());
 
-        procerr.read((byte[]) err);
+        procerr.readFully((byte[]) err);
         errmut = new String((byte[]) err);
         if(print)
           System.err.print(errmut);
@@ -92,10 +92,9 @@ public class Methods
     unauthorized = false;
     for(i = 0; i < cmd.length; i++)
     {
-      err = "";
       this.cmdStatus(cmd[i], false);
 
-      scanner = new Scanner(err);
+      scanner = new Scanner(errmut);
       while(scanner.hasNextLine())
       {
         errscan = scanner.nextLine();
