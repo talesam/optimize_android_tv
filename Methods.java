@@ -32,11 +32,15 @@
 package OTT;
 
 import java.util.Scanner;
+import java.io.InputStream;
+import java.lang.reflect.Array;
 import OTT.Methods;
 
 public class Methods
 {
-  public boolean cmdStatus(String[] cmd, String err)
+  public String errmut;
+
+  public boolean cmdStatus(String[] cmd, boolean print)
   {
     try
     {
@@ -45,13 +49,13 @@ public class Methods
       proc.waitFor();
       if(proc.exitValue() != 0)
       {
-        int pchar;
-        
-        while((pchar = proc.getErrorStream().read()) > 0)
-          if(err != null)
-            err += (char) pchar;
-          else
-            System.err.print((char) pchar);
+        InputStream procerr = proc.getErrorStream();
+        Object err = Array.newInstance(byte.class, procerr.available());
+
+        procerr.read((byte[]) err);
+        errmut = new String((byte[]) err);
+        if(print)
+          System.err.print(errmut);
         return false;
       }
     }
@@ -71,7 +75,6 @@ public class Methods
 
     System.out.print(Main.STD + msg);
     line = pause.nextLine();
-    pause.close();
 
     return line;
   }
@@ -90,7 +93,7 @@ public class Methods
     for(i = 0; i < cmd.length; i++)
     {
       err = "";
-      this.cmdStatus(cmd[i], err);
+      this.cmdStatus(cmd[i], false);
 
       scanner = new Scanner(err);
       while(scanner.hasNextLine())

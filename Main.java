@@ -37,13 +37,14 @@
 
 package OTT;
 
-import java.io.InputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.DataInputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.File;
 import java.net.URL;
 import java.net.URI;
 import java.util.Scanner;
+import java.lang.reflect.Array;
 import OTT.Methods;
 
 public class Main
@@ -104,24 +105,23 @@ public class Main
     {
       String preurl = "https://github.com/Krush206/optimize_android_tv/raw/java";
       URL url = new URI(isAndroid ? preurl + "/OTT_Android.jar" : preurl + "/OTT_Linux.jar").toURL();
-      InputStream uin = url.openStream();
-      FileReader fin = new FileReader(classpath);
-      String app = "", localapp = "";
-      int pchar;
+      FileInputStream fin = new FileInputStream(classpath);
+      DataInputStream appin = new DataInputStream(url.openStream());
+      Object localapp = Array.newInstance(byte.class, fin.available()),
+             app = Array.newInstance(byte.class, url.openConnection().getContentLength());
+      int i;
 
-      while((pchar = uin.read()) > 0)
-        app += (char) pchar;
-      uin.close();
-      while((pchar = fin.read()) > 0)
-        localapp += (char) pchar;
+      appin.readFully((byte[]) app);
+      appin.close();
+      fin.read((byte[]) localapp);
       fin.close();
-      if(localapp.hashCode() != app.hashCode())
+      if(!localapp.equals(app))
       {
-        FileWriter fout = new FileWriter(classpath);
+        FileOutputStream fout = new FileOutputStream(classpath);
 
         System.out.println(BLU + "* " + BOL + "Nova versão encontrada!\n" +
                            BLU + "* " + STD + "Atualizando. Aguarde!");
-        fout.write(app);
+        fout.write((byte[]) app);
         fout.close();
         System.out.println(GRE + "* " + BOL + "Atualizado com sucesso!\n\n" + STD +
                            "Reinicie o aplicativo.");
@@ -140,7 +140,7 @@ public class Main
     Methods ott = new Methods();
     String ip;
 
-    System.out.println(CLR + BOL + "Bem-vindo(a) ao OTT (Otimização TV TCL)!\n\n" +
+    System.out.println(BOL + "Bem-vindo(a) ao OTT (Otimização TV TCL)!\n\n" +
                        "Modelos compatíveis:\n" +
                        PIN + "Chassi T221T01 = " + CYA + "S615" + STD + ".\n" +
                        PIN + "Chassi R51AT01 = " + CYA + "P635" + STD + ".\n" +
@@ -168,7 +168,6 @@ public class Main
     {
       System.out.println(BOL + "Você está executando esse script no " + PIN + "Android" + STD + '.');
       if(new File(path[0] + "/usr/bin/fakeroot").exists() &&
-         new File(path[0] + "/usr/bin/tput").exists() &&
          new File(path[0] + "/usr/bin/adb").exists())
         System.out.println(GRE046 + "Dependências encontradas!");
       else
@@ -176,7 +175,7 @@ public class Main
         String properties = cwd + "/.termux/termux.properties",
                property = "apt.default_repo=stable",
                cmd[][] = { { "apt", "update" }, { "apt", "upgrade", "-y" },
-                           { "apt", "install", "-y", "ncurses-utils", "android-tools", "fakeroot" } };
+                           { "apt", "install", "-y", "android-tools", "fakeroot" } };
         int i;
         boolean repoIsSet = false;
 
@@ -196,6 +195,8 @@ public class Main
               break;
             }
           }
+
+          file.close();
         }
         catch(Exception e)
         {
@@ -207,16 +208,14 @@ public class Main
         {
           try
           {
-            FileReader fin = new FileReader(properties);
-            FileWriter fout;
-            String raw = "";
-            int pchar;
+            FileInputStream fin = new FileInputStream(properties);
+            FileOutputStream fout;
+            Object raw = Array.newInstance(byte.class, (int) new File(properties).length());
 
-            while((pchar = fin.read()) > 0)
-              raw += (char) pchar;
-            raw += property;
-            fout = new FileWriter(properties);
-            fout.write(raw + '\n');
+            fin.read((byte[]) raw);
+            fout = new FileOutputStream(properties);
+            fout.write((byte[]) raw);
+            fout.write((property + '\n').getBytes());
             fout.close();
             fin.close();
           }
@@ -229,7 +228,7 @@ public class Main
 
         System.out.println(BLU + "* " + BOL + "Baixando dependências. Aguarde!");
         for(i = 0; i < cmd.length; i++)
-          if(!ott.cmdStatus(cmd[i], null))
+          if(!ott.cmdStatus(cmd[i], true))
             System.exit(-1);
 
 	System.out.println(GRE + "Dependências instaladas com sucesso!");
@@ -257,7 +256,7 @@ public class Main
     {
       if(ott.connect(ip))
         break;
-      ip = ott.pause(CLR + RED + "Endereço IP inválido." +
+      ip = ott.pause(CLR + RED + "Endereço IP inválido.\n" +
                      STD + "Insira o endereço IP da TV: ");
     }
   }
