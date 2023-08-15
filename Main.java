@@ -85,6 +85,8 @@ public class Main
 
   public static void main(String[] args)
   {
+    System.out.print(CLR);
+
     if(((isAndroid = ((path[0] + "/home").compareTo(cwd)) == 0) || path[1].compareTo(cwd) == 0) &&
          classpath.compareTo(System.getProperty("java.class.path")) == 0)
     {
@@ -99,21 +101,19 @@ public class Main
 
   public static void version()
   {
-    System.out.print(CLR);
-
     try
     {
       String preurl = "https://github.com/Krush206/optimize_android_tv/raw/java";
       URL url = new URI(isAndroid ? preurl + "/OTT_Android.jar" : preurl + "/OTT_Linux.jar").toURL();
-      FileInputStream fin = new FileInputStream(classpath);
-      DataInputStream appin = new DataInputStream(url.openStream());
+      DataInputStream fin = new DataInputStream(new FileInputStream(classpath)),
+                      appin = new DataInputStream(url.openStream());
       Object localapp = Array.newInstance(byte.class, fin.available()),
              app = Array.newInstance(byte.class, url.openConnection().getContentLength());
       int i;
 
       appin.readFully((byte[]) app);
       appin.close();
-      fin.read((byte[]) localapp);
+      fin.readFully((byte[]) localapp);
       fin.close();
       if(!localapp.equals(app))
       {
@@ -208,11 +208,11 @@ public class Main
         {
           try
           {
-            FileInputStream fin = new FileInputStream(properties);
+            DataInputStream fin = new DataInputStream(new FileInputStream(properties));
             FileOutputStream fout;
             Object raw = Array.newInstance(byte.class, (int) new File(properties).length());
 
-            fin.read((byte[]) raw);
+            fin.readFully((byte[]) raw);
             fout = new FileOutputStream(properties);
             fout.write((byte[]) raw);
             fout.write((property + '\n').getBytes());
