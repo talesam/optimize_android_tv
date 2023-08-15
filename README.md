@@ -11,11 +11,11 @@ Esse aplicativo tem a finalidade de realizar otimizações em TVs TCL que rodam 
 ## Instalar
 Termux:
 ```
-curl -L https://github.com/Krush206/optimize_android_tv/raw/java/OTT_Android.jar ; chmod +x OTT_Android.jar
+curl -L -o OTT_Android.jar https://github.com/Krush206/optimize_android_tv/raw/java/OTT_Android.jar ; chmod +x OTT_Android.jar
 ```
 Linux:
 ```
-curl -L https://github.com/Krush206/optimize_android_tv/raw/java/OTT_Linux.jar ; chmod +x OTT_Linux.jar
+curl -L -o OTT_Linux.jar https://github.com/Krush206/optimize_android_tv/raw/java/OTT_Linux.jar ; chmod +x OTT_Linux.jar
 ```
 
 ## Executar
