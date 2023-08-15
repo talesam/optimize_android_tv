@@ -44,6 +44,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URI;
 import java.util.Scanner;
+import java.util.Arrays;
 import java.lang.reflect.Array;
 import OTT.Methods;
 
@@ -115,7 +116,7 @@ public class Main
       appin.close();
       fin.readFully((byte[]) localapp);
       fin.close();
-      if(!localapp.equals(app))
+      if(!Arrays.equals((byte[]) app, (byte[]) localapp))
       {
         FileOutputStream fout = new FileOutputStream(classpath);
 
