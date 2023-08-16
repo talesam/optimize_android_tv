@@ -1,27 +1,31 @@
 # Otimização Android TV (TCL)
-## Otimização de TV Android TCL e Mi Box
+* Lembrando que esse aplicativo é apenas para TVs TCL com Android TV, não para Mi Box.
+* Aplicativo 100% compatível com o [Termux](https://f-droid.org/en/packages/com.termux).
 
-_*Lembrando que esse script (ott.sh) é apenas para TVs TCL com Android TV, não para Mibox_
+Esse aplicativo tem a finalidade de realizar otimizações em TVs TCL que rodam Android, removendo aplicativos lixo (Russo, Indiano, Australiano e Chinês), dentre outros que só estão presente na TV para deixar ela mais inchada e lerda. Também realiza a instalação de um novo Laucher otimizado e alguns apps.
 
-Esse script tem a finalizade de realizar otimizações em TVs TCL que rodam Android, removendo aplicativos lixo (Russo, Indiano, Australiano e Chineses), dentre outros que só estão presente na TV para deixar ela mais inchada e lerda. Também realiza a instalação de um novo Laucher otimizado e alguns apps.
-
-## Dependências para Linux: adb e wget
-
-_Script 100% compatível com o [Termux](https://f-droid.org/en/packages/com.termux)_
-
+## Dependências
+* adb
+* fakeroot (Termux)
 
 ## Instalar
-
+Termux:
 ```
-curl -s https://raw.githubusercontent.com/talesam/optimize_android_tv/master/ott -o ott; chmod +x ott; ./ott
+curl -L -o OTT_Android.jar https://github.com/Krush206/optimize_android_tv/raw/java/OTT_Android.jar ; chmod +x OTT_Android.jar
+```
+Linux:
+```
+curl -L -o OTT_Linux.jar https://github.com/Krush206/optimize_android_tv/raw/java/OTT_Linux.jar ; chmod +x OTT_Linux.jar
 ```
 
 ## Executar
-
-Após o comando acima, para executar o script novamente basta digitar:
-
+Termux:
 ```
-./ott
+dalvikvm -cp OTT_Android.jar OTT.Main
+```
+Linux:
+```
+java -jar OTT_Linux.jar
 ```
 
-![Imagem Script otimizar Android TV (TCL)](https://user-images.githubusercontent.com/981368/164873999-f7318e15-7b8e-42fa-b1fd-71ee4505753d.png)
+![](https://user-images.githubusercontent.com/981368/164873999-f7318e15-7b8e-42fa-b1fd-71ee4505753d.png)
