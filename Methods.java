@@ -36,7 +36,7 @@ import java.io.DataInputStream;
 import java.lang.reflect.Array;
 import OTT.Methods;
 
-public class Methods
+public class Methods extends Object
 {
   public String errmut = "";
 
@@ -81,18 +81,17 @@ public class Methods
 
   public boolean connect(String ip)
   {
-    System.out.println(Main.ORA214 + "Conectando-se à sua TV.");
     String cmd[][] = { { "adb", "disconnect" }, { "adb", "connect", ip + ":5555" },
                        { "adb", "get-state" } },
-           err, errscan;
+           errscan;
     Scanner scanner;
-    boolean unauthorized;
     int i;
 
-    unauthorized = false;
+    System.out.println(Main.ORA214 + "\nConectando-se à sua TV.\n");
+
     for(i = 0; i < cmd.length; i++)
     {
-      this.cmdStatus(cmd[i], false);
+      cmdStatus(cmd[i], false);
 
       scanner = new Scanner(errmut);
       while(scanner.hasNextLine())
@@ -106,8 +105,8 @@ public class Methods
                              Main.CYA122 + "Marque a seguinte caixa:\n" +
                              Main.PIN + "Sempre permitir a partir deste computador.\n" +
                              Main.CYA122 + "Selecione OK.\n");
-          this.pause("Pressione ENTER para continuar.");
-          unauthorized = true;
+          pause("Pressione ENTER para continuar.");
+          i = 0;
 
           break;
         }
@@ -117,8 +116,6 @@ public class Methods
           return false;
         }
       }
-      if(unauthorized)
-        i = 0;
 
       scanner.close();
     }

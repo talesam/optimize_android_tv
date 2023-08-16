@@ -48,7 +48,7 @@ import java.util.Arrays;
 import java.lang.reflect.Array;
 import OTT.Methods;
 
-public class Main
+public class Main extends Object
 {
   /* Cores degrade */
   public static final String RED001 = "\033[38;5;1m", /* Vermelho 1 */
@@ -91,8 +91,10 @@ public class Main
     if(((isAndroid = ((path[0] + "/home").compareTo(cwd)) == 0) || path[1].compareTo(cwd) == 0) &&
          classpath.compareTo(System.getProperty("java.class.path")) == 0)
     {
-      version();
-      init();
+      Main ott = new Main();
+
+      ott.version();
+      ott.init();
       System.exit(0);
     }
 
@@ -100,7 +102,7 @@ public class Main
     System.exit(-1);
   }
 
-  public static void version()
+  public void version()
   {
     try
     {
@@ -136,7 +138,7 @@ public class Main
     }
   }
 
-  public static void init()
+  public void init()
   {
     Methods ott = new Methods();
     String ip;
@@ -205,7 +207,7 @@ public class Main
           System.exit(-1);
         }
 
-	if(!repoIsSet)
+        if(!repoIsSet)
         {
           try
           {
@@ -232,7 +234,7 @@ public class Main
           if(!ott.cmdStatus(cmd[i], true))
             System.exit(-1);
 
-	System.out.println(GRE + "Dependências instaladas com sucesso!");
+        System.out.println(GRE + "Dependências instaladas com sucesso!");
       }
     }
     else
@@ -247,8 +249,8 @@ public class Main
       }
     }
 
-    System.out.println(GRE046 + "Prepare-se para conectar à TV.\n");
-    ip = ott.pause(STD + "O endereço IP da sua TV pode ser encontrado no caminho abaixo:\n" +
+    ip = ott.pause(GRE046 + "Prepare-se para conectar à TV.\n\n" +
+                   STD + "O endereço IP da sua TV pode ser encontrado no caminho abaixo:\n" +
                    YEL226 + "Configurações\n" +
                    "Preferências do dispositivo\n" +
                    "Sobre\n\n" +
@@ -257,8 +259,8 @@ public class Main
     {
       if(ott.connect(ip))
         break;
-      ip = ott.pause(CLR + RED + "Endereço IP inválido.\n" +
-                     STD + "Insira o endereço IP da TV: ");
+      System.err.println(CLR + RED + "Endereço IP inválido.");
+      ip = ott.pause(STD + "Insira o endereço IP da TV: ");
     }
   }
 }
