@@ -38,4 +38,6 @@ com.tcl.assistant|Serve de auxilio para o Google Assistente, porém não é ativ
 com.tcl.copydatatotv|API para apk da TCL. *SEGURO DESATIVAR*.
 com.tcl.bi|Bi são alguns recursos tipo esticker que acaba rodando em background, sem uso. *SEGURO DESATIVAR*.
 com.android.camera2|Aplicativo de câmera, só é útil se tiver uma webcam. *SEGURO DESATIVAR*.
+com.tcl.tv.tclhome_master|Controlar dispositivos smart, mas precisa logar na conta da TCL. *SEGURO DESATIVAR*.
+com.tcl.notereminder|App de lembretes. *SEGURO DESATIVAR*.
 
